@@ -1,0 +1,105 @@
+##################################################
+# GÉNÉRALITÉS
+##################################################
+
+    - Une investigation numérique doit être assermentée et menée par un expert judiciaire pour que les preuves trouvées soient recevables d'un point de vue légal.
+    - Identification du contexte => Collecte des données => Analyse des données => Reporting.
+    - Penser à faire un hash de l'image pour vérifier que la phase d'analyse ne l'altère pas.
+    - Les techniques d'anti-forensique sont tout aussi développées, si on ne trouve pas quelque chose il ne faut jamais éloigner l'option que l'attaquant a bien masqué ses traces.
+    - Format RAW = Bloc de données brutes sans métadonnées supplémentaires =/= Formats enrichis dédiés à la forensique = EWF, AFF, etc.
+    - IoC = Indicator of Compromise = Élément qui démontre qu'il y a eu une intrusion.
+    - Matrice ATT&CK = Projet du MITRE qui répertorie énormément de types d'attaques.
+
+
+##################################################
+# LISTE D'OUTILS
+##################################################
+
+    - FTK Imager => Copie des disques durs et de la RAM.
+    - Encase (Guidance Software) => Suite d'utilitaires pour l'analyse, le tri et le déchiffrement.
+    - Nirsoft = Autre suite d'utilitaires, mais gratuite.
+    - Bloqueurs en écriture => Outils hardware permettant de limiter les modifications sur le disque et d'épurer la capture.
+    - The Sleuth Kit => Ensemble de commandes (blkls, fsstat, mactime, jpeg_extract...) réunies dans un framework d'analyse.
+    - Autopsy => Interface graphique pour TSK.
+    - Windows Sysinternals => Suite de Microsoft pour surveiller, diagnostiquer et dépanner des environnements Windows efficacement.
+    - Google Rapid Response => Framework d'analyse développé par Google et orienté Incident Response.
+    - Linux SIFT => Distribution orientée sur la forensique.
+    - Volatility => Framework pour l'analyse de mémoire vive.
+    - Bulk-Extractor => Programme (C++) permettant d'automatiser l'extraction de données importantes d'un dump de mémoire vive. (Utilisation : "bulk_extractor -o dossier_dump image.dmp")
+
+
+##################################################
+# WINDOWS
+##################################################
+
+    - NTFS utilise une Master File Table ($MFT) qui enregistre les fichiers et leurs informations associées (timestamps, ACL...)
+    - Cette MFT est l'un des fichiers les plus importants pour NTFS, elle est masquée mais on peut l'extraire avec les outils présentés plus haut. Elle se trouve à la racine du disque dur.
+    - Des outils comme Mft2Csv permettent de facilement parser un fichier $MFT et d'en faire un contenu exploitable.
+
+    - Les clés de registre sont stockées dans 'C:\Windows\System32\Config\' mais celles qui sont spécifiques aux utilisateurs sont dans 'C:\Users\%username%'.
+    - Prefetch = Système de cache qui génère des fichiers '.pf' dans 'C:\Windows\Prefetch' quand des applications s'exécutent, pour en accélérer les prochains chargements.
+    - Outlook => Penser aux fichiers '.pst' et '.ost' stockés dans 'C:\users\username\AppData\Local\Microsoft\Outlook'.
+    - Les documents Office peuvent être décompressés comme des fichiers zippés et contiennent de précieuses informations. La majorité des sous-fichiers sont des XML mais il y a aussi quelques fichiers OLE (Object Linking and Embedding) que l'on peut analyser avec des outils comme oledump.py : https://github.com/DidierStevens/DidierStevensSuite/blob/master/oledump.py
+
+    - C:\pagefile.sys = Fichier de swap où Windows stocke les processus inactifs pour virtuellement augmenter la RAM.
+    - C:\hiberfil.sys = Fichier où Windows stocke l'intégralité de la mémoire RAM quand l'ordinateur passe en veille prolongée.
+    - Pour ces fichiers, Windows maintient un descripteur ouvert pour nous empêcher d'y toucher pendant que le système tourne mais on peut les extraire facilement avec les outils d'extraction.
+
+
+##################################################
+# VOLATILITY 3
+##################################################
+
+    Documentation complète : https://readthedocs.org/projects/volatility3/downloads/pdf/latest/
+    Fiche plutôt orientée Windows mais on peut facilement retrouver les équivalents Linux et Mac dans le manuel.
+    L'idéal est d'avoir une version 2 et une version 3 de Volatility puisque tous les modules ne sont pas forcément communs aux deux versions.
+    La version 3 est beaucoup plus rapide et est plus adaptée au développement de modules, elle risque d'encore beaucoup s'améliorer dans le futur même si à l'heure actuelle il manque des plugins très utiles.
+
+
+    ### GÉNÉRAL ###
+
+    - "volatility -h" => Lister les modules.
+    - "volatility [module] -h" => Afficher les arguments obligatoires et facultatifs d'un module.
+    - "volatility -f image.dmp windows.info" => Informations sur l'OS et la machine.
+    - "volatility -f image.dmp banners" => Équivalent de "windows.info" pour Mac et Linux. Ne marche pas toujours pour Linux puisqu'il y a beaucoup plus de distributions et pas toujours répertoriées.
+    - On peut rajouter des tables de symboles
+    - "volatility -f image.dmp yarascan.YaraScan --yara-rules "https://" => Chercher un motif dans la mémoire, voir aussi "windows.vadyarascan".
+
+
+    ### PROCESSUS ###
+
+    La plupart des modules liés aux processus possèdent une option "--pid" pour isoler un processus en particulier et une option "--dump" pour transférer les résultats dans un dossier.
+    Un processus qui a au moins un thread (colonne "Threads") était en cours au moment où l'image a été prise. En revanche si il y en a zéro, c'est généralement que le processus était terminé ou inactif.
+
+    - "volatility -f image.dmp windows.pslist" => Liste classique des processus, équivalent du gestionnaire de tâches.
+    - "volatility -f image.dmp windows.pslist --pid 1234 --dump" => Extraire le binaire correspondant au processus 1234. Même si il n'est pas en '.exe' il possède bien le format PE.
+    - "volatility -f image.dmp windows.pstree" => Équivalent de "windows.pslist" mais sous forme d'arbre. Très intéressant pour voir les relations entre les processus (parent -> enfant).
+    - "volatility -f image.dmp windows.psscan" => Scan plus poussé que les deux autres. Permet de déceler les processus inactifs ou cachés par des rootkits.
+    - "volatility -f image.dmp windows.cmdline" => Historique des programmes exécutés, avec leur(s) argument(s). Très pratique.
+    - "volatility -f image.dmp windows.registry.userassist" => Affiche les programmes exécutés récemment avec pas mal de contexte. Peut permettre de repérer en un coup d'oeil des éléments suspects.
+    - "volatility -f image.dmp windows.dlllist" => Liste les DLL utilisées.
+    - "volatility -f image.dmp windows.envars" => Liste des variables d'environnement utilisées.
+    - "volatility -f image.dmp windows.handles" => Liste des handles ouverts par les processus. Cela permet de trouver très précisément quel processus touche à quoi dans le système.
+    - "volatility -f image.dmp -o dump_1234 windows.memmap --pid 1234 --dump" => Faire un dump mémoire complet du processus 1234 dans le dossier dump_1234.
+    - "volatility -f image.dmp -o dump_1234 windows.dumpfiles --pid 1234" => Dump de l'exécutable et de tous les fichiers associés au processus 1234.
+    - "volatility -f image.dmp windows.malfind" => Recherche de malwares et d'injections de code.
+
+
+    ### RÉSEAU ###
+
+    - "volatility -f image.dmp windows.netscan" => Voir les connexions réseau. Équivalent du "netstat.exe" de Windows
+    - Si une connexion est suspecte, penser à la rechercher avec un Yara scan (" --yara-rules '1.2.3.4' ") et à croiser les informations.
+    - Dans la version 3, il n'y a plus d'équivalent Linux et Mac à "windows.netscan", il faut obligatoirement passer par la version 2.
+
+
+    ### SERVICES ###
+
+    - "volatility -f image.dmp windows.svcscan" => Lister les services.
+    - "volatility -f image.dmp windows.getservicesids" => Lister les SID des services. Permet de vérifier si il y en a un qui se lance avec des privilèges trop hauts ou un SID suspect par exemple.
+
+
+    ### REGISTRE ###
+
+    - "volatility -f image.dmp windows.registry.hivelist" => Liste des ruches disponibles dans l'image.
+    - "volatility -f image.dmp windows.registry.printkey --key 'Software\Microsoft\Windows\CurrentVersion' --recurse" => Afficher toutes les clés sous une ruche ou sous une clé spécifique.
+
