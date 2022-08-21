@@ -43,7 +43,7 @@
 
     - C:\pagefile.sys = Fichier de swap où Windows stocke les processus inactifs pour virtuellement augmenter la RAM.
     - C:\hiberfil.sys = Fichier où Windows stocke l'intégralité de la mémoire RAM quand l'ordinateur passe en veille prolongée.
-    - Pour ces fichiers, Windows maintient un descripteur ouvert pour nous empêcher d'y toucher pendant que le système tourne mais on peut les extraire facilement avec les outils d'extraction.
+    - Pour ces fichiers, Windows maintient un descripteur ouvert pour nous empêcher d'y toucher pendant que le système tourne mais on peut les extraire facilement avec les outils d'extraction listés plus haut.
 
 
 ##################################################
