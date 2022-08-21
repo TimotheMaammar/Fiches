@@ -1,0 +1,44 @@
+Portail : https://azure.microsoft.com/
+
+Le principal avantage du cloud et de la virtualisation est d'éviter de sous-dimensionner ou sur-dimensioner ses infrastructures et ses investissements.
+
+Azure est mis à jour beaucoup plus fréquemment que les versions classiques de Windows, la roadmap est très dense. Le SDK est gratuit et mis à jour tous les mois.
+
+
+
+Plusieurs types de cloud :
+
+    - Cloud privé => Société ou acteur privé qui héberge toute sa propre infrastructure.
+    - Cloud pbulic => Société ou acteur privé qui loue son infrastructure auprès d'un spécialiste.
+    - Cloud hybride => Mélange entre privé et public.
+
+
+
+Plusieurs formes de cloud computing :
+
+    - Infrastructure as a Service (IaaS) => L'hébergeur loue des environnements virtuels, le client installe et configure ses systèmes comme il le souhaite. Beaucoup de liberté mais nécessite de la compétence. Exemples : Microsoft Azure, AWS.
+
+    - Platform as a Service (PaaS) => Abstraction totale, boîte noire avec quelques programmes ou services que l'on paye. Moins de liberté mais aucune maintenance et aucune compétence à avoir. Exemples : Heroku, OpenShift.
+
+    - Software as a Service (SaaS) => Une société fournit une application complète, accessible généralement par un navigateur ou une API. Exemples : Outlook, Dropbox.
+
+
+
+Un service cloud Azure est composé de trois éléments :
+
+    - Fichier .csdef = Définition de service (XML) = Schéma
+    - Fichier .cscfg = Configuration de service (XML) = Paramètres
+    - Fichier .cspkg = Package de service (ZIP) = Schéma + Binaires
+
+Passer par les fichiers de configuration XML au lieu de chercher à modifier localement. C'est plus simple, plus rapide et c'est faisable à chaud.
+
+
+
+Trois types de données accessibles par l'API REST :
+
+    - Tables = Genre de NoSQL. Données semi-persistantes, objets métiers...
+    - Queues = Communication entre différents composants d'une application.
+    - Blobs = Fichiers volumineux comme les documents et les vidéos.
+
+Ne jamais sauvegarder des données critiques sur une instance. Le service continu est assuré mais pas le fait que l'instance va rester exactement la même de A à Z. Il peut y avoir un changement de machine transparent par exemple.
+
