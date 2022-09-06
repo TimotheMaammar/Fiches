@@ -1,0 +1,128 @@
+Voir le cours de Stanford CS224N pour les démonstrations mathématiques détaillées.
+
+
+###################
+GÉNÉRALITÉS
+###################
+
+NLP = Natural Language Processing = Sous-ensemble de la linguistique et de l'ingénieurie de l'information.
+
+Les performances actuelles des intelligences artificielles pour la traduction et la compréhension de texte sont bonnes mais encore très perfectibles.
+
+Sens = Association d'un signifiant (symbole) à un signifié (idée)
+
+La solution primaire qui était principalement utilisée avant était de prendre des paquets de synonymes venant de diverses bases de données de mots. Le problème de cette solution est qu'elle manque de nuance et qu'un humain doit prémâcher tout le travail. Maintenant on passe plutôt par la méthode du contexte et des vecteurs.
+
+
+Distributional Semantics => Le sens vient de l'usage et du contexte.
+                         => Mesures prosaïques sur la fréquence d'apparition du mot et sur ses voisins les plus courants.
+                         => Encodage de la similarité des mots dans les vecteurs.
+
+
+Il y a en général trois principaux buts dans le NLP :
+
+        - Sentiment analysis    => Deviner si un avis d'utilisateur est positif ou négatif par exemple
+        - Topic modeling        => Distinguer de quel(s) sujet(s) parle un texte. Voir LDA, LSA, PLSA, CTM...
+        - Text generation       => Chatbot, création d'oeuvres littéraires, etc. Voir "Chaînes de Markov"
+
+
+###################
+Word2vec
+###################
+
+Word embedding = Word vectorization = Word representation = Fait de transformer les mots en vecteurs
+
+Word2vec est un ensemble de réseaux de neurones développé par Google pour faire du word embedding. Il construit de la sémantique pour les mots grâce à des techniques de Machine Learning et de mathématiques. Il donne de très bons résultats et certains points sont plutôt impressionnants et terriblement pratiques :
+
+    - Le vecteur obtenu en soustrayant le vecteur "Pékin" au vecteur "Chine" est le même que celui qu'on obtient en soustrayant "Paris" à "France"
+    - Même principe pour "Roi - Homme + Femme = Reine" par exemple
+    - ...
+
+
+Deux modèles :
+
+    - "Continuous Bag of words" (CBOW) => Probabilité d'un mot d'après un contexte (= plusieurs mots). L'ordre des mots n'a donc aucune importance.
+    - "Skip-gram" => Probabilité d'un contexte d'après un mot. Plus lent à entraîner mais donne plus de sémantique et moins d'overfitting.
+
+
+Algorithme vulgarisé :
+
+    - Parcours d'un corpus de textes
+    - Chaque mot est associé à un vecteur
+    - Chaque position (t) a un mot central (c) et un voisinage (o)
+    - On utilise la similarité des word vectors de c(t) et o(t) pour calculer c(t+1)
+    - On fait les ajustements nécessaires
+    - On continue le parcours
+
+
+Word2vec est implémenté dans le module Gensim (Python).
+
+
+###################
+Processus classique
+###################
+
+--------------------------------------------------------------------
+    1) Poser la bonne question
+--------------------------------------------------------------------
+
+        Formuler le problème clairement et d'une manière la plus quantifiable possible.
+
+--------------------------------------------------------------------
+    2) Sélectionner et nettoyer les données (Preprocessing)
+--------------------------------------------------------------------
+
+        Cette étape représente en général au moins la moitié du travail.
+
+        Mais à l'heure actuelle de très bonnes bases de données ont déjà été pensées et construites par des linguistes.
+
+        Beaucoup de techniques de nettoyage existent :
+
+            - "Stop words removal" => Retirer tous les mots parasites ('the', 'it', 'a', ...)
+            - Tout mettre en minuscules et sans ponctuation, éventuellement retirer les chiffres, etc.
+            - "Tokenization" => Ranger le texte sous une forme itérable et claire, en général un tableau de strings
+            - "Stemming" / "Lemmatization" => Prendre le radical ou la forme canonique des mots pour éviter que les variantes polluent l'algorithme (ex : 'mangeait' / 'mangera' / 'mangerait' => manger)
+
+        Quelques modules utiles (Python) :
+
+            - Pandas = Module d'analyse et de modification de données.
+            - Re = Module contenant des outils à base d'expressions régulières.
+
+--------------------------------------------------------------------
+    3) Exploratory Data Analysis (EDA)
+--------------------------------------------------------------------
+
+        Beaucoup de techniques à utiliser selon le besoin :
+
+            - Chercher les mots les plus présents ("top words")
+            - Chercher les mots n'apparaissant qu'une seule fois
+            - Ne prendre que les noms
+            - Chercher des vulgarités et de l'argot
+            - Isoler des patterns récurrents
+            - Chercher les 'outliers' (données distantes du reste)
+            - Utiliser des modules comme TextBlob
+            - ...
+
+            TextBlob (surcouche de NLTK) est un module Python qui permet de définir une polarité et une subjectivité pour chaque mot.
+
+--------------------------------------------------------------------
+    4) Techniques et algorithmes
+--------------------------------------------------------------------
+
+        Cette étape consiste principalement à choisir quel type d'algorithme on va utiliser :
+
+            - Support Vector Machines (SVM)
+            - Maximum entropy
+            - Naive Bayes
+            - Deep Learning
+            - ...
+
+        Scikit-Learn = Module de Machine Learning open source (Python).
+
+--------------------------------------------------------------------
+    5) Conclure et répondre à la question posée
+--------------------------------------------------------------------
+
+
+
+
