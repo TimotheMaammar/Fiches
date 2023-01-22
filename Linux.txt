@@ -1,6 +1,6 @@
 ##################################################
-#    LINUX
-#    Préparation LPIC-1 + CTF + Astuces
+#    Linux
+#    Préparation LPIC-1 + CTF + Rappels et astuces
 ##################################################
 
 
