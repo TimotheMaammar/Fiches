@@ -96,6 +96,14 @@ Vim
 
 - La commande “ethtool” sert à voir et modifier les paramètres avancés de la carte réseau.
 
+- Les commandes "ip -s link show eth0" et "ifconfig eth0" permettent d'afficher le nombre de paquets transmis (TX) et reçus (RX).
+
+- La commande "lsof" permet de voir quels processus ouvrent des ports et quels processus sont en écoute.
+    => Exemple pour les ports TCP : "sudo lsof -iTCP -sTCP:LISTEN"
+    => Exemple pour les ports UDP : "sudo lsof -iUDP -P -n | egrep -v '(127|::1)'"
+
+- La modification d'un wrapper TCP s'applique immédiatement à toutes les nouvelles connexions.
+
 - Fichiers à vérifier pour les problèmes de DNS :
         /etc/nsswitch.conf
         /etc/hosts
@@ -491,6 +499,8 @@ LVM = Logical Volume Management = Couche d’abstraction permettant de redimensi
 
 - Bien échapper les caractères spéciaux dans les tâches planifiées, c'est une erreur courante :
     => "* */4 * 8 1 tar cvf /sauvegardes/dossier.`date \+\%j`.tar /home/dossier"
+    
+- La commande "hwclock" permet de synchroniser l'horloge matérielle et l'horloge système, dans un sens ou dans l'autre ("--hctosys" ou "--systohc"). 
 
 
 ##############################
@@ -792,8 +802,6 @@ Lister les fichiers avec des permissions SUID :
     ls -alh /var/log/postgresql/
     ls -alh /var/log/proftpd/
     ls -alh /var/log/samba/
-
-    Note: auth.log, boot, btmp, daemon.log, debug, dmesg, kern.log, mail.info, mail.log, mail.warn, messages, syslog, udev, wtmp
 
 - Sortir d'un shell à commandes limitées grâce à Python :
     python -c 'import pty;pty.spawn("/bin/bash")'
