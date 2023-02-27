@@ -214,7 +214,7 @@ Vim
     => Plus besoin de partitions étendues / disques logiques.
     => En revanche les vieux systèmes ne gèrent pas ce standard.
 
-LVM = Logical Volume Management = Couche d’abstraction permettant de redimensionner ou bouger les disques par exemple.
+- LVM = Logical Volume Management = Couche d’abstraction permettant de redimensionner ou bouger les disques par exemple.
 
 - Quelques intérêts du partitionnement :
     => Séparer un dossier pour en limiter la taille.
