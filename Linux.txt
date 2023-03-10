@@ -571,6 +571,7 @@ Vim
 ##############################
 
 Voir aussi : https://gtfobins.github.io/
+Penser aussi aux Capabilities : "getcap -r / 2>/dev/null"
 
 ##### Privilege Escalation
 
