@@ -570,8 +570,10 @@ Vim
 #   CTF
 ##############################
 
-Voir aussi : https://gtfobins.github.io/
-Penser aussi aux Capabilities : "getcap -r / 2>/dev/null"
+Voir aussi : 	- https://gtfobins.github.io/
+		- https://www.linuxkernelcves.com/cves
+		
+Penser aux Capabilities : "getcap -r / 2>/dev/null"
 
 ##### Privilege Escalation
 
