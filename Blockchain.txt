@@ -1,0 +1,281 @@
+Synthèse --- Udemy + Recherches
+
+########################################
+#           GÉNÉRALITÉS                #
+########################################
+
+Liens utiles :
+        - https://coinmarketcap.com/fr/
+        - https://tools.superdatascience.com/blockchain
+        - https://www.blockchain.com/explorer
+        - https://www.pensezblockchain.ca/
+        - https://ethgasstation.info/
+        - https://docs.soliditylang.org/
+
+Blockchain = Liste grandissante d'enregistrements appelés "blocs", liés et sécurisés par de la cryptographie.
+Cryptomonnaies = Une des nombreuses implémentations de la blockchain à ne pas confondre avec la technologie de la blockchain elle-même.
+Bloc de génèse = Tout premier bloc d'une blockchain = Seul bloc sans hash précédent et seul bloc à ne pas être miné.
+
+Le concept de blockchain vient initialement de Stuart Haber et W Stornetta en 1991, même si la vraie naissance arrive vers 2008 avec Satoshi Nakamoto
+        => Voir le papier "How to time-stamp a digital document" (Stuart Haber, Wakefield Scott Stornetta - 1991)
+        => Voir le whitepaper "Bitcoin: A Peer-to-Peer Electronic Cash System" (Satoshi Nakamoto - 2008)
+
+Un bloc est au minimum constitué de données, d'un hash basé sur ces données et du hash du précédent bloc. Si les données du bloc précédent venaient à être modifiées, le hash de celui-ci changerait, et il y aurait une différence immédiatement remarquable pour le bloc suivant. La blockchain est copiée sur tous les pairs du réseau et actualisée régulièrement. Pour qu'un attaquant puisse la corrompre, il faudrait qu'il possède au moins 51% de la puissance de calcul de tout le réseau et qu'il arrive à modifier tous les blocs suivant le bloc à corrompre dans un laps de temps extrêmement court. Ce cas de figure est de l'ordre de l'impossible pour tous les projets ayant un minimum d'envergure. Et en conséquence, plus un réseau grandit, plus il devient difficile de l'attaquer.
+
+On peut faire une analogie entre les transactions contenues dans un bloc et des actes notariés par exemple (qui sont la base de la civilisation et du concept de propriété). L'avantage de la blockchain est que c'est un registre décentralisé gravé dans le marbre, immuable, indestructible, impossible à voler et impossible à corrompre. En comparaison, un cahier est par exemple un ledger beaucoup plus basique mais beaucoup plus faillible.
+        => Voir l'article "The Blockchain Economy: A beginner’s guide to institutional cryptoeconomics" (Chris Berg, Sinclair Davidson, Jason Potts - 2017)
+        => Voir l'article "The Meaning of Decentralization" (Vitalik Buterin - 2017)
+
+
+
+########################################
+#           CRYPTOGRAPHIE              #
+########################################
+
+Pour ce qui est de l'algorithme, la plupart des cryptomonnaies utilisent le SHA256.
+
+Le SHA256 a été conçu par la NSA et publié en 2002 par le gouvernement des États-Unis. Il est open-source et très sécurisé.
+        => Voir le rapport "On the Secure Hash Algorithm family" (Wouter Penard, Tim van Werkhoven - 2008)
+
+Il y a cinq prérequis pour les algorithmes de hashing :
+
+    1) Être unidirectionnel                 => On ne doit pas pouvoir retrouver l'entrée à partir de la sortie.
+    2) Être déterministe                    => Une entrée X doit toujours donner la même entrée Y.
+    3) Être assez rapide en calcul          => L'algorithme ne doit pas être trop long pour calculer chaque entrée.
+    4) Posséder un "effet avalanche"        => Même une minuscule modification de l'entrée doit produire de gros changements sur la sortie.
+    5) Gérer les collisions                 => Il doit y avoir très peu de collisions, voire aucune.
+
+
+Clé privée = Identifiant unique grâce auquel on signe les contenus
+Clé publique = Ce qui permet à la fonction dédiée de vérifier le message signé
+
+Les adresses sont obtenues à partir des clés publiques et il est donc logique que ce soit cela que l'on donne pour se faire envoyer des coins ou des tokens.
+
+        => Voir hk support difference between public key and public address ??
+
+Clé privée => Clé publique => Adresse
+
+BIP 0032 (Bitcoin Improvement Proposal n°32) = Proposition visant à ajouter une "Master private key" pour qu'un individu ou une organisation puisse générer plusieurs clés privées. Cela sert à camoufler un peu mieux les transactions mais aussi à mieux hiérarchiser les wallets pour les grosses organisations par exemple. Cette clé est en général générée à partir d'une suite de mots que l'on peut retenir (mais surtout pas diffuser) pour pouvoir reconstruire absolument toute la chaîne en cas de perte.
+        => Voir la page https://en.bitcoin.it/wiki/BIP_0032
+        => Voir l'article "Deterministic wallets, their advantages and their understated flaws (Vitalik Buterin - 2013)
+
+Master private key => Private key n°1 => Public key n°1 => Address n°1
+                   => Private key n°2 => Public key n°2 => Address n°2
+                   => Private key n°3 => Public key n°3 => Address n°3
+                   [...]
+
+Le Bitcoin utilise la courbe elliptique Secp256k1
+        => Voir https://en.bitcoin.it/wiki/Secp256k1
+
+
+
+########################################
+#           MINAGE                     #
+########################################
+
+Le minage est une sorte de compétition mathématique de puissance de calcul entre différents acteurs d'un réseau Proof-of-Work, destinée à sécuriser et fiabiliser la chaîne, et où le vainqueur est récompensé par le droit d'écrire le prochain bloc de la chaîne ainsi que par des coins ou des tokens généralement. On parle de "hash rate" pour mesurer le nombre de hashs testés par seconde. Si jamais deux blocs sortent au même moment et qu'il y a un conflit, c'est la chaîne qui a le plus de "hash power" qui gagne.
+
+Le but est en général de trouver le bon champ "Nonce" (= "Number used once" = Valeur numérique unique) pour produire un hash qui respecte les conditions posées par le protocole. Pour le Bitcoin par exemple, le challenge est de trouver un hash avec un certain nombre de 0 au début, pour que le hash obtenu soit inférieur au facteur de difficulté. C'est difficile, et cela le devient encore plus au fur et à mesure que le nombre de 0 augmente. On retrouve ici l'importance de sélectionner un algorithme fiable et respectant la condition de l'effet avalanche. Cela permet de garantir qu'il n'y a aucun raccourci et aucune triangulation possible, et que les mineurs vont bien devoir mettre de la puissance de calcul.
+
+Le minage a commencé à montrer des faiblesses vers 2017 quand la demande a explosé. Le traitement de certaines transactions a commencé à se compter en heures, voire en jours. À l'heure actuelle, on estime que les 21 millions de Bitcoins seront minés vers l'année 2140.
+
+La plupart des mineurs sont regroupés dans des mining pools servant à les coordonner et à éviter qu'ils minent les mêmes hashs en parallèle. À ne pas confondre avec le memory pool, qui est simplement une zone d'attente pour les transactions.
+
+CPU vs GPU vs ASIC :
+        - CPU   = Généraliste et pas super efficace
+        - GPU   = Spécialisé et beaucoup plus efficace qu'un CPU
+        - ASIC  = Application-Specific Integrated Circuit = Ultra-spécialisé et encore plus efficace qu'un GPU
+
+Bloc orphelin = Abus de langage pour dire "Bloc expiré" ou "Bloc invalidé" en parlant d'un bloc qui a été miné en parallèle mais qui n'a pas été choisi par le consensus. Les vrais blocs orphelins ne sont apparus qu'au début des blockchains et étaient un cas assez rare de blocs dont on n'arrivait pas à retrouver l'ascendance.
+
+
+
+########################################
+#           CONSENSUS                  #
+########################################
+
+Problème des généraux byzantins = Métaphore illustrant la nécessité d'arriver à un consensus et d'avoir un canal fiable pour les communications.
+        => Voir l'article "The Byzantine Generals Problem" (Leslie Lamport, Robert Shostak, Marshall Pease - 1982)
+
+Deux principaux challenges pour le consensus :
+    1) Protéger le réseau des attaquants extérieurs
+    2) Gérer les chaînes parallèles et régulariser les différences
+
+Principaux protocoles de consensus :
+
+    - Proof-of-Work (PoW) = Tout premier protocole de consensus pour la blockchain, issu d'un filtre anti-spam des années 1990. Le concept était à la base plutôt simple : n'accepter que les mails dont l'envoyeur a fourni un minimum de puissance de calcul. C'est efficace mais très coûteux en énergie à grande échelle. C'est le protocole utilisé par la plupart des blockchains de première génération.
+
+    - Proof-of-Stake (PoS) = Deuxième protocole le plus courant, alternative beaucoup moins énergivore mais un peu moins sécurisée que le Proof-of-Work. Ce protocole se base sur la possession de tokens au lieu de la puissance de calcul investie. Les gens qui mettent en dépôt et votent sur une blockchain Proof-of-Stake sont appelés des "minters" (= forgeurs), à ne pas confondre avec les mineurs du protocole Proof-of-Work.
+
+    - Il y a plein d'autres protocoles moins populaires qui voient régulièrement le jour : Proof-of-Activity, Proof-of-Location, Proof-of-Importance, Proof-of-Authority, etc.
+
+
+Soft fork = Petite divergence entre les mineurs, certains suivent la nouvelle branche et d'autres pas. Exemple : SegWit
+Hard fork = Création d'une nouvelle blockchain et d'un nouveau protocole, mise à jour nécessaire. Exemple : Bitcoin Cash
+
+Paradoxalement, les soft forks sont généralement un durcissement des règles et les hard forks sont généralement un assouplissement des règles. Mais c'est finalement assez logique puisque pour une soft fork il doit y avoir une rétrocompatibilité, alors qu'une hard fork peut se permettre de ne pas respecter cela, puisqu'il y a création d'une nouvelle branche, qui sera un nouveau projet à part entière.
+
+
+
+########################################
+#           EXEMPLE CONCRET            #
+########################################
+
+Il est extrêmement simple d'implémenter une blockchain.
+En Python on peut par exemple la mettre sous forme d'une application web et utiliser Flask + Curl pour faire transiter les requêtes et les résultats facilement.
+
+Exemple de classe (Udemy - Module pratique) :
+
+import datetime
+import hashlib
+import json
+from flask import Flask, jsonify # pip install Flask
+
+class Blockchain:
+
+    ### Constructeur ###
+    def __init__(self):
+        self.chain = []
+        self.create_block(proof = 1, previous_hash = '0')
+
+    ### Création d'un bloc ###
+    def create_block(self, proof, previous_hash):
+        block = {'index': len(self.chain) + 1,
+                 'timestamp': str(datetime.datetime.now()),
+                 'proof': proof,
+                 'previous_hash': previous_hash}
+        self.chain.append(block)
+        return block
+
+    ### Récupération d'un bloc précédent ###
+    def get_previous_block(self):
+        return self.chain[-1]
+
+    ### Proof-of-Work ###
+    # L'opération mathématique contenue dans le hash serait idéalement à modifier
+    # Ce n'est pas forcément une soustraction
+    # Et on peut faire beaucoup mieux
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False
+        while check_proof is False:
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+            if hash_operation[:4] == '0000':
+                check_proof = True
+            else:
+                new_proof += 1
+        return new_proof
+
+    ### Hashing ###
+    def hash(self, block):
+        encoded_block = json.dumps(block, sort_keys = True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
+
+    ### Vérification d'une chaîne ###
+    # Exemple avec le cas de 4 leading zeros
+    # À modifier selon les circonstances
+    def is_chain_valid(self, chain):
+        previous_block = chain[0]
+        block_index = 1
+        while block_index < len(chain):
+            block = chain[block_index]
+            if block['previous_hash'] != self.hash(previous_block):
+                return False
+            previous_proof = previous_block['proof']
+            proof = block['proof']
+            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
+            if hash_operation[:4] != '0000':
+                return False
+            previous_block = block
+            block_index += 1
+        return True
+
+    ### Minage ###
+    @app.route("/mine_block", methods=["GET"])
+    def mine_block():
+        previous_block = blockchain.get_previous_block()
+        previous_proof = previous_block["proof"]
+        proof = blockchain.proof_of_work(previous_proof)
+        previous_hash = blockchain.hash(previous_block)
+        block = blockchain.create_block(proof,previous_hash)
+        response = {'message':'Congratulations, you have added a block to the blockchain',
+                        'index':block['index'],
+                        'timestamp':block['timestamp'],
+                        'proof':block['proof'],
+                        'previous_hash':block['previous_hash']
+                        }
+        return jsonify(response), 200
+
+
+
+########################################
+#           CRYPTOMONNAIES             #
+########################################
+
+Ce qui transforme une blockchain en cryptomonnaie est principalement le fait d'ajouter des ensembles de transactions dans les données de chaque bloc.
+
+Exemple du Bitcoin :
+
+Trois couches à ne pas confondre :
+
+        1) Technologie          => La blockchain
+        2) Protocole / Coin     => Bitcoin
+        3) Token(s)             => Le Bitcoin n'en a pas (mais Ethereum en a plein par exemple)
+
+
+La politique monétaire du Bitcoin peut se résumer en deux concepts :
+
+        1) Block frequency : Le temps moyen entre deux blocs a été fixé à environ 10 minutes, même si cela peut énormément varier. C'est un choix à faire au moment de la conception de l'écosystème. Tous les 2016 blocs, le temps qui a été mis pour miner les blocs précédents est évalué, et la difficulté est adaptée.
+        2) Halving : Le nombre de Bitcoins décernés par bloc est divisé par 2 tous les 210 000 blocs (= environ tous les 4 ans). C'est une stratégie visant à contrôler l'inflation en réduisant la quantité de bitcoins créés au fil du temps.
+
+ICO = Initial Coin Offering = Genre de crowdfunding pour les cryptomonnaies
+
+
+
+########################################
+#           TRANSACTIONS               #
+########################################
+
+"Dans Bitcoin, il n’y a pas de monnaies, pas d’expéditeurs pas de bénéficiaires, pas de comptes et pas d’adresses" - Andreas Antonopoulos
+
+UTXO = Unspent Transaction Output = Transaction reçue par quelqu'un mais pas dépensée. Concept qui permet d'éviter le problème de la double dépense pour une monnaie numérique (notamment le cas du copier/coller et le cas de deux transactions envoyées quasiment en même temps).
+
+Balance = Somme de toutes les UTXO trouvées dans la blockchain.
+
+Wallet = Outil qui calcule le total des UTXO et qui l'affiche. Ce sont les wallets qui construisent les concepts de monnaie, d'expéditeur, de destinataire, etc.
+
+Les transactions pourraient théoriquement être gratuites mais il a été décidé de mettre des petits frais de transaction pour éviter que des gens mal intentionnés puissent spammer le réseau avec des infinités de transactions minuscules.
+
+SegWit = Segregated Witness = Fonctionnalité créée en 2015 visant à réduire le poids des transactions dans les blocs optimiser la vitesse du réseau. Elle a été mise en place sur le Bitcoin avec une soft fork en 2017 suite aux débats sur la scalabilité du Bitcoin, mais la première cryptomonnaie à l'avoir implémentée était le Litecoin.
+        => Voir l'article "Understanding Segwit Block Size" (Jimmy Song - 2017)
+
+
+
+########################################
+#           ETHEREUM                   #
+########################################
+
+Ethereum a été créé en 2013 par Vitalik Buterin, qui avait la volonté de faire des applications décentralisées et hébergées sur une blockchain, en opposition au modèle actuel du serveur dédié. La finalité serait d'avoir un genre de superordinateur décentralisé composé des puissances de calcul de tous les membres de son réseau. Vitalik militait pour améliorer le Bitcoin Script et le rendre Turing-complet mais sans succès, il a donc créé son propre projet.
+
+Bitcoin Script = Langage utilisé par le Bitcoin. Il n'est pas Turing-complet parce qu'il manque les boucles (qui sont très dangereuses dans une blockchain).
+
+Solidity = Équivalent de Bitcoin Script pour Ethereum mais Turing-complet.
+
+EVM = Ethereum Virtual Machine = Cerveau d'Ethereum
+
+Gas = Unité à payer utilisée par l'EVM pour effectuer les transactions et mettre à jour la World State. On utilise le Gas plutôt que l'ETH parce que ce dernier fluctue beaucoup trop.
+
+World State = Variable contenant tout l'inventaire du réseau Ethereum et représentant l'état de la blockchain à un instant précis.
+
+Smart contract = Programme stocké sur la blockchain et lancé quand des conditions sont remplies.
+
+DApp = Decentralized Application = Application autonome et décentralisée qui fonctionne avec des smart contracts.
+
+DAO = Decentralized Autonomous Organization = Organisation collectivement gérée par la blockchain et qui travaille à une mission partagée.
+
+Attaque du DAO = Hack de 2016 sur une DAO à cause de vulnérabilités présentes dans son code. Les gens voyaient ce qu'il se passait mais ne pouvaient rien y faire parce que c'était légal en soi, cela a amené de gros débats et une hard fork entre ETH ("On modifie la blockchain et on reprend l'argent") et ETC ("On laisse l'argent au hacker, la blockchain doit rester immuable").
+        => Voir l'article "The Ether Thief" (Matthew Leising - 2017)
+
+
+
+
