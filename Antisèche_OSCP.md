@@ -300,6 +300,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     netstat -ano
     ((Get-PSReadlineOption).HistorySavePath)
     dir C:\
+    schtasks /query /fo LIST /v | Select-String TaskName
     Get-LocalUser
     Get-LocalGroup
     Get-LocalGroupMember
