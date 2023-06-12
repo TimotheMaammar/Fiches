@@ -207,6 +207,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     xfreerdp /v:192.168.100.100 /u:Tim /cert:ignore /d:DOMAINE /p:Mdp123
     rdesktop -u Tim 192.168.100.100
     evil-winrm -u Tim -p Mdp123 -i 192.168.100.100
+    impacket-smbclient DOMAINE/Tim:'Mdp123'@192.168.100.100
     
 **CrackMapExec**
 
