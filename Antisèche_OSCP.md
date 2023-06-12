@@ -155,6 +155,15 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 **Virtual hosts**
 
     ffuf  -u http://FUZZ.monsite.com -w  /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+    
+**Dossier .git exposé**
+
+    wget --mirror --convert-links --no-parent --wait=0.5 http://192.168.100.100/.git/
+    ~/git-extractor.sh .git DUMP_GIT 
+    git log 
+    git show 
+    git gui 
+
 
 
 ## Windows / Active Directory
