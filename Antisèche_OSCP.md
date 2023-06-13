@@ -326,6 +326,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     ((Get-PSReadlineOption).HistorySavePath)
     dir C:\
     schtasks /query /fo LIST /v | Select-String TaskName
+    Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
     Get-LocalUser
     Get-LocalGroup
     Get-LocalGroupMember
