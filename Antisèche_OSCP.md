@@ -327,6 +327,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     dir C:\
     schtasks /query /fo LIST /v | Select-String TaskName
     Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
+    Get-ScheduledTask | Where-Object { $_.State -ne 'Disabled' }
     Get-LocalUser
     Get-LocalGroup
     Get-LocalGroupMember
