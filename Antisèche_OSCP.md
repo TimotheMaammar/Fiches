@@ -151,7 +151,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 **Fichiers**
 
-    ffuf -u http://192.168.100.100/dossier/FUZZ -w ~/ma_liste.txt -e .php,.txt,.ini,.conf,.log,.html,.js,.bak,.aspx,.asp,.zip -fc 403
+    ffuf -u http://192.168.100.100/dossier/FUZZ -w ~/ma_liste.txt -e .pdf,.php,.txt,.ini,.conf,.log,.html,.js,.bak,.aspx,.asp,.zip -fc 403
     
 **Paramètres** 
 
