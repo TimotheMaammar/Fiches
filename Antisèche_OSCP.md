@@ -325,9 +325,8 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     netstat -ano
     ((Get-PSReadlineOption).HistorySavePath)
     dir C:\
-    schtasks /query /fo LIST /v | Select-String TaskName
+    schtasks /query /fo LIST /v | Select-String Author,TaskName
     Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
-    Get-ScheduledTask | Where-Object { $_.State -ne 'Disabled' }
     Get-LocalUser
     Get-LocalGroup
     Get-LocalGroupMember
