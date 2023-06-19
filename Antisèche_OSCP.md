@@ -394,6 +394,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     cat home/user/.ssh/id_ed25519_sk
     
 **Divers**
+
     find / -name "user.keystore" 2>/dev/null
     find / -name "login.keyring" 2>/dev/null
     find / -name "pubring.kbx" 2>/dev/null
