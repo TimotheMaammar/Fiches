@@ -196,6 +196,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 	- Regarder les comptes kerberoastables sur BloodHound
 	- Regarder les historiques Powershell de chaque utilisateur et aller voir manuellement dans chaque chemin
 	- Ne surtout pas négliger les comptes qui ont l'air moins importants comme "support" ou "web_svc"
+ 	- Ajouter les nouveaux domaines découverts dans /etc/hosts
 
 ### Téléchargements utiles
 
