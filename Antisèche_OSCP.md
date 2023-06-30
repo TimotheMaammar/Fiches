@@ -147,7 +147,8 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 **Généralités**
 
-    - Inspecter le code source de chaque nouvelle page trouvée.
+    - Penser à tenter le nom de domaine au lieu de l'adresse IP
+    - Inspecter le code source de chaque nouvelle page trouvée
     - Inspecter les différents CMS et les différentes technologies de chaque nouvelle page trouvée
     - Tenter les credentials par défaut de chaque service et notamment pour les CMS
     - Faire du fuzzing sur chaque nouvelle page trouvée
