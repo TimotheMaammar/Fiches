@@ -123,24 +123,24 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 ### Port scanning
 
-    nmap -p- -sV -T4 192.168.100.100 -oN nmap_100.txt
-    nmap -Pn -p- --min-rate 100 192.168.100.100 -T4 --open
-    nmap -T4 -A -v 192.168.100.100
+    nmap -p- -sV -T4 $IP -oN nmap_100.txt
+    nmap -Pn -p- --min-rate 100 $IP -T4 --open
+    nmap -T4 -A -v $IP
     ...
-    sudo  /home/timothe/.local/bin/autorecon 192.168.100.100
-    sudo masscan -p1-65535,U:1-65535 192.168.100.100 -e tun0  > ports_100.txt
+    sudo  /home/timothe/.local/bin/autorecon $IP
+    sudo masscan -p1-65535,U:1-65535 $IP -e tun0  > ports_100.txt
     ...
-    proxychains -q nmap -vvv -sT --top-ports=50 -Pn 172.16.100.100
+    proxychains -q nmap -vvv -sT --top-ports=50 -Pn $IP
 
 ### SMB
 
-	enum4linux 192.168.100.100
-	enum4linux -a 192.168.100.100
-	nmblookup -A 192.168.100.100
-    nmap -sV -sT -p445 --script vuln 192.168.100.100
-	nmap -sV -sT -p445 --script safe 192.168.100.100
-	nmap -sV -sT -p445 --script "vuln and safe" 192.168.100.100
-	smbclient --no-pass -L //192.168.100.100
+	enum4linux $IP
+	enum4linux -a $IP
+	nmblookup -A $IP
+    nmap -sV -sT -p445 --script vuln $IP
+	nmap -sV -sT -p445 --script safe $IP
+	nmap -sV -sT -p445 --script "vuln and safe" $IP
+	smbclient --no-pass -L //$IP
 
 
 ### Web
