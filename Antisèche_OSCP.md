@@ -150,7 +150,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
  	snmpbulkwalk -v 2c -c public $IP > dump3.txt
   	sudo apt-get install snmp-mibs-downloader
    	snmpwalk -v 2c -c public $IP NET-SNMP-EXTEND-MIB::nsExtendOutputFull
-    	snmpwalk -v 2c -c public $IP NET-SNMP-EXTEND-MIB::nsExtendObjects
+	snmpwalk -v 2c -c public $IP NET-SNMP-EXTEND-MIB::nsExtendObjects
 
  	
 ### Web
