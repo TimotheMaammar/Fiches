@@ -142,7 +142,17 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 	nmap -sV -sT -p445 --script "vuln and safe" $IP
 	smbclient --no-pass -L //$IP
 
+### SNMP
 
+ 	onesixtyone -c ~/wordlists/SNMP_communities.txt $IP
+  	snmpwalk -c public -v2c -t 10 $IP > dump.txt
+	snmp-check $IP -p 161 -c public > dump2.txt
+ 	snmpbulkwalk -v 2c -c public $IP > dump3.txt
+  	sudo apt-get install snmp-mibs-downloader
+   	snmpwalk -v 2c -c public $IP NET-SNMP-EXTEND-MIB::nsExtendOutputFull
+    	snmpwalk -v 2c -c public $IP NET-SNMP-EXTEND-MIB::nsExtendObjects
+
+ 	
 ### Web
 
 **Généralités**
