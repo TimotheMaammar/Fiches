@@ -123,12 +123,12 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 ### Port scanning
 
-    nmap -p- -sV -T4 $IP -oN nmap_100.txt
+    nmap -p- -sC -sV -T4 $IP -oN nmap.txt
     nmap -Pn -p- --min-rate 100 $IP -T4 --open
     nmap -T4 -A -v $IP
     ...
     sudo  /home/timothe/.local/bin/autorecon $IP
-    sudo masscan -p1-65535,U:1-65535 $IP -e tun0  > ports_100.txt
+    sudo masscan -p1-65535,U:1-65535 $IP -e tun0  > ports.txt
     ...
     proxychains -q nmap -vvv -sT --top-ports=50 -Pn $IP
 
