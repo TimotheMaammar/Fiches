@@ -374,6 +374,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | select DisplayName
     Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" | select DisplayName
     Get-ChildItem -Path C:\ -Include *.log -File -Recurse -ErrorAction SilentlyContinue
+    Get-ChildItem -Path C:\Users -File -Recurse -ErrorAction SilentlyContinue
 
 **Remplacement de service mal configuré**
 
