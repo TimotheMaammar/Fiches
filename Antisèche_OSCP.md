@@ -203,7 +203,8 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 **Virtual hosts**
 
-    ffuf  -u http://FUZZ.monsite.com -w  /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+    ffuf -u http://FUZZ.monsite.com -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+    gobuster dns -d monsite.com -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt
     
 **Dossier .git exposé**
 
