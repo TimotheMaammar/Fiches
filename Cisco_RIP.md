@@ -59,6 +59,9 @@
     ip address 192.168.10.100 255.255.255.0
     interface Serial0/1/0
     ip address 100.100.100.10 255.255.255.0
+    ip route 192.168.0.0 255.255.0.0 192.168.10.1
+    ip route 10.0.0.0 255.0.0.0 192.168.10.1
+    ip route 0.0.0.0 0.0.0.0 100.100.100.11
 
 
 ### Routeur INTERNET-BERLIN
@@ -69,6 +72,7 @@
     ip address 192.168.60.100 255.255.255.0
     interface Serial0/1/0
     ip address 101.100.100.60 255.255.255.0
+    ip route 0.0.0.0 0.0.0.0 101.100.100.61
 
 ### Routeur INTERNET
 
@@ -78,6 +82,8 @@
     ip address 100.100.100.11 255.255.255.0
     interface Serial0/1/1
     ip address 101.100.100.61 255.255.255.0
+    ip route 10.0.0.0 255.0.0.0 100.100.100.10
+    ip route 192.168.0.0 255.255.0.0 100.100.100.10
 
 ## France
 
