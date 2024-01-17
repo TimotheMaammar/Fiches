@@ -49,6 +49,36 @@
     network 10.0.80.0
     debug ip rip
 
+## Internet 
+
+### Routeur INTERNET-PARIS
+
+    enable
+    config
+    interface GigabitEthernet0/0/0
+    ip address 192.168.10.100 255.255.255.0
+    interface Serial0/1/0
+    ip address 100.100.100.10 255.255.255.0
+
+
+### Routeur INTERNET-BERLIN
+
+    enable
+    config
+    interface GigabitEthernet0/0/0
+    ip address 192.168.60.100 255.255.255.0
+    interface Serial0/1/0
+    ip address 101.100.100.60 255.255.255.0
+
+### Routeur INTERNET
+
+    enable
+    config
+    interface Serial0/1/0
+    ip address 100.100.100.11 255.255.255.0
+    interface Serial0/1/1
+    ip address 101.100.100.61 255.255.255.0
+
 ## France
 
 ### Routeur PARIS
@@ -62,12 +92,15 @@
     interface GigabitEthernet0/0/1
     ip addr 10.0.10.2 255.255.255.0
     no shut
+
+    ip route 0.0.0.0 0.0.0.0 192.168.10.100
     
     router rip 
     version 2 
     no auto-summary
     network 10.0.10.0
     network 192.168.10.0
+    redistribute static
 
 ### Routeur LYON
 
