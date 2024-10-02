@@ -118,6 +118,7 @@ Contenu du fichier :
 Connexion : 
 
      wpa_supplicant -D nl80211 -i wlan2 -c /etc/wpa_supplicant/wep.conf
+     sudo dhclient wlan1 -v
 
 
     
