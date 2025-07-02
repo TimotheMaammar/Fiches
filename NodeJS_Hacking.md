@@ -70,5 +70,6 @@
 
 https://github.com/aadityapurani/NodeJS-Red-Team-Cheat-Sheet
 https://github.com/lirantal/awesome-nodejs-security
+https://gist.github.com/LeCoupa/985b82968d8285987dc3
 https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce
 https://medium.com/@sebnemK/node-js-rce-and-a-simple-reverse-shell-ctf-1b2de51c1a44
