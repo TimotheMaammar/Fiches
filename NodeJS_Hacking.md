@@ -16,7 +16,7 @@
 - Object.assign() => Prototype Pollution
 - JSON.parse() => Prototype Pollution si objet fusionné sans vérification
 - merge() => Prototype Pollution si la source a des propriétés dangereuses
-- res.redirect() => Open Redirect si argument contrôlé
+- redirect() => Open Redirect si argument contrôlé
 
 ### Injections NoSQL
 
