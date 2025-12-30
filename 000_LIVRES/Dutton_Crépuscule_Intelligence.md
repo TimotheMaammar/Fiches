@@ -17,7 +17,8 @@ Entre les années 1400 et le milieu du 19ème les gens les plus riches (et donc 
 
 L'intelligence peut être vue comme la capacité à penser de manière abstraite et à apprendre rapidement. On peut aussi voir pas mal de points communs entre l'intelligence et la puissance de calcul d'un ordinateur.
 
-L'intelligence peut être plutôt bien mesurée par les tests de QI contrairement à ce que certains pensent. C'est confirmé par la forte corrélation entre le QI d'un enfant et son QI à l'âge adulte ainsi que le fait qu'un test de QI fait assez tôt prédit fortement la réussite globale de quelqu'un. [ SOURCES 3 ET 4 ]
+L'intelligence peut être plutôt bien mesurée par les tests de QI contrairement à ce que certains pensent. C'est confirmé par la forte corrélation entre le QI d'un enfant et son QI à l'âge adulte ainsi que le fait qu'un test de QI fait assez tôt prédit fortement la réussite globale de quelqu'un.   
+[ SOURCES 3 ET 4 ]
 
 Une grande intelligence donne en moyenne une longévité plus longue et une meilleure qualité de vie, alors qu'à l'inverse une faible intelligence donne en moyenne plus de propension à la criminalité et aux décisions impulsives. [ SOURCES 5 ET 6 ]
 
