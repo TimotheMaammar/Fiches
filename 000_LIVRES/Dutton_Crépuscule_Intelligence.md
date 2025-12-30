@@ -71,7 +71,7 @@ Mais pour bien comprendre quels facteurs amènent à un génie, il faut parler u
 
 Génie = Très haut QI + Traits de personnalité spécifiques
 
-Pour continuer dans la métaphore des ordinateurs, si le QI est la capacité de calcul d'un humain, la personnalité serait plutôt les types de logiciels installés. Le problème est que c'est un facteur beaucoup plus subjectif que le QI, et qui peut également évoluer avec l'âge.
+Pour continuer dans la métaphore des ordinateurs, si le QI est la capacité de calcul d'un humain, la personnalité serait plutôt les types de logiciels installés. Le problème est que c'est un facteur beaucoup plus subjectif que le QI, et qui peut également évoluer avec l'âge.   
 [ SOURCE 2 ]
 
 Pas mal de modèles différents ont vu le jour pour essayer de cadrer tout cela, mais le plus populaire reste à l'heure actuelle le Big Five : 
@@ -108,7 +108,8 @@ Dean K. Simonton et Hans Eysenck sont deux psychologues célèbres qui ont appor
 Au-delà de l'intelligence, les génies tendent à avoir du psychoticisme, qui est une combinaison de faiblesses relatives en conscienciosité et en agréabilité, ce qui leur donne une plus grande facilité à sortir des règles. Ils tendent aussi à avoir une plus grosse hétérogénéité dans leur intelligence et à parfois être en-dessous sur des tâches simples.
 
 Les génies semblent ne pas beaucoup se reproduire, au contraire ils tendent plutôt à se détourner de la sexualité. [ SOURCE 14 ]   
-Cela peut sembler étrange puisque l'on peut se dire qu'ils auraient dû être épurés par la sélection naturelle il y a longtemps, mais il faut en revenir au concept de sélection de groupe mis en avant par William Hamilton. Selon cette théorie, on peut transmettre ses gènes non seulement en ayant des enfants, mais aussi indirectement en aidant des individus génétiquement proches (famille, puis groupe). Ainsi, des comportements altruistes voire sacrificiels peuvent être avantageux sur le plan génétique s’ils bénéficient suffisamment au groupe. [ SOURCES 15 À 20 ]
+Cela peut sembler étrange puisque l'on peut se dire qu'ils auraient dû être épurés par la sélection naturelle il y a longtemps, mais il faut en revenir au concept de sélection de groupe mis en avant par William Hamilton. Selon cette théorie, on peut transmettre ses gènes non seulement en ayant des enfants, mais aussi indirectement en aidant des individus génétiquement proches (famille, puis groupe). Ainsi, des comportements altruistes voire sacrificiels peuvent être avantageux sur le plan génétique s’ils bénéficient suffisamment au groupe.   
+[ SOURCES 15 À 20 ]
 
 Le pool génétique doit êre un minimum élargi pour que les génies aient une chance d'apparaître, ce qui a pour conséquence qu'ils sont généralement issus de parents classiques sur le plan de l'intelligence et de la personnalité.
 
@@ -120,7 +121,8 @@ En parallèle, le politologue Charles Murray a montré en 2003 (dans son livre "
 
 En 1857, le psychiatre français Bénédict Morel publie un livre où il pointe que la mortalité infantile est en déclin. [ SOURCE 4 ]   
 Ce processus provenait évidemment des avancées de la médecine, et Morel prédisait également que cela amènerait une baisse de l'intelligence et de la "robustesse immunitaire" chez les français. Francis Galton en arrivait à la même conclusion une décennie après, chez les anglais. 
-Darwin avait également exprimé beaucoup de pessimisme sur le futur de l'humanité dans une conversation avec Alfred Russell Wallace peu avant sa mort. [ SOURCE 8 ]   
+Darwin avait également exprimé beaucoup de pessimisme sur le futur de l'humanité dans une conversation avec Alfred Russell Wallace peu avant sa mort.   
+[ SOURCE 8 ]   
 Karl Pearson, Sir Ronald Fisher et Raymond B. Cattell entre autres en arrivaient aux mêmes conclusions. [ SOURCES 9 À 14 ]   
 
 La différence de fertilité entre les QI faibles et les QI élevés avait déjà été notée à l'époque, mais c'est aujourd'hui beaucoup plus documenté. En 1979 le biochimiste allemand Gerhard Meisenberg a suivi un peu plus de 12000 jeunes avec des tests de QI et une vérification de leur nombre d'enfants jusqu'en 2004. L'étude a montré une petite corrélation inverse entre le QI et le nombre d'enfants, et particulièrement plus élevée chez les femmes.    
@@ -176,7 +178,8 @@ L'étude a aussi été répliquée en Suède entre 1959 et 1985, avec également
 
 ## Distinction des couleurs
 
-La discrimination des couleurs (la capacité à distinguer des nuances subtiles de couleurs) est en déclin aussi. Spearman avait montré que cette métrique était très corrélée à l'intelligence générale et à la performance académique. Il appelait ça le "general factor of discriminative ability". [ SOURCE 12 ]   
+La discrimination des couleurs (la capacité à distinguer des nuances subtiles de couleurs) est en déclin aussi. Spearman avait montré que cette métrique était très corrélée à l'intelligence générale et à la performance académique. Il appelait ça le "general factor of discriminative ability".    
+[ SOURCE 12 ]   
 
 ## Mots compliqués
 
