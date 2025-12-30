@@ -28,12 +28,13 @@ Il y a quelques cas particuliers qui ont une intelligence très spécifique (exe
 [ SOURCES 14 ET 15 ]
 
 Charles Spearman est principalement celui qui a mis en avant l'existence du facteur G. Le test de QI est une mesure imparfaite du facteur G mais quand même une des meilleures que l'on possède. 
-Aujourd'hui les scientifiques voient plutôt l'intelligence comme une pyramide qui a pour sommet ce même facteur G. Dessous on a quelques autres sous-groupes liés à l'aptitude verbale, la perception des formes, etc. [ SOURCE 17 ]
+Aujourd'hui les scientifiques voient plutôt l'intelligence comme une pyramide qui a pour sommet ce même facteur G. Dessous on a quelques autres sous-groupes liés à l'aptitude verbale, la perception des formes, etc.    
+[ SOURCE 17 ]
 
 Il faut également garder à l'esprit que le QI est une mesure comparative, qui classe quelqu'un par rapport à ceux de son âge. Les tests de QI sont globalement une mesure assez robuste puisque les tests culture-fair ont un pouvoir prédictif similaire à travers différentes cultures. Les tests de QI ont également une corrélation positive aux tests de réflexes, qui est une mesure objective.   
 [ SOURCES 23 À 27 ]
 
-Le côté héréditaire du QI a été testé à la fois entre des enfants et leurs parents ainsi qu'entre des jumeaux. Et l'environnement a une petite part dans l'équation également parce que les gens intelligents tendent naturellement à se créer des environnements stimulants. 
+Le côté héréditaire du QI a été testé à la fois entre des enfants et leurs parents ainsi qu'entre des jumeaux. Et l'environnement a une petite part dans l'équation également parce que les gens intelligents tendent naturellement à se créer des environnements stimulants.   
 [ SOURCES 33 À 35 ]
 
 Les critiques du type "On ne sait pas vraiment ce qu'est l'intelligence" et "Elle peut varier selon les cultures" sont globalement infondées et souvent émotionnelles, on est capable de prédire l'intelligence à partir de certains allèles bien connus par exemple.   
