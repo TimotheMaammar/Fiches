@@ -44,14 +44,13 @@ Version plus condensée pour .text (section de code) grâce à la RVA fournie da
 dd KERNEL32 + 0x3c L1 # 000000f8
 dd KERNEL32 + 0xf8 + 0x2c L1 # 00010000
 ? KERNEL32 + 0x10000 # 761e0000
-!address 761e0000 
+!address 761e0000
+dd 7624c000 - 400 # Fouille depuis la fin pour trouver une code cave par exemple
 ```
+La commande "!dh" permet également d'afficher les headers directement et de gagner beaucoup de temps dans certains cas :
 
-On peut ensuite soit fouiller à partir de la "End Address" en retirant un nombre arbitraire d'octets soit simplement depuis le début en ajoutant un nombre arbitraire (si on cherche une code cave par exemple) : 
-
-	dd 7624c000 - 400
-	dd 761e0000 + 400
-
+	!dh -a KERNEL32    # 10000 base of code
+	? KERNEL32 + 0x10000
 
 # Structure d'un PE
 ## DOS Header (IMAGE_DOS_HEADER)
