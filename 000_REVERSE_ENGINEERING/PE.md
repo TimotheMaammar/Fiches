@@ -38,6 +38,21 @@ Inspection des sections :
 db 761d00f8 + 0x18 + 0xe0 L10 
 # On doit trouver un nom de section comme ".text" par exemple
 ```
+Version plus condensée pour .text (section de code) grâce à la RVA fournie dans le Optional Header (0x2C) : 
+
+```
+dd KERNEL32 + 0x3c L1 # 000000f8
+dd KERNEL32 + 0xf8 + 0x2c L1 # 00010000
+? KERNEL32 + 0x10000 # 761e0000
+!address 761e0000 
+```
+
+On peut ensuite soit fouiller à partir de la "End Address" en retirant un nombre arbitraire d'octets soit simplement depuis le début en ajoutant un nombre arbitraire (si on cherche une code cave par exemple) : 
+
+	dd 7624c000 - 400
+	dd 761e0000 + 400
+
+
 # Structure d'un PE
 ## DOS Header (IMAGE_DOS_HEADER)
 
