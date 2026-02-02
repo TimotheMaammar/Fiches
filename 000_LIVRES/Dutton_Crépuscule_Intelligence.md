@@ -12,7 +12,7 @@ Intelligence + Salaire = Ratio de corrélation de 0.3
 Intelligence + Niveau d'éducation = Ratio de corrélation de 0.5   
 Intelligence + Performances scolaires = Ratio de corrélation de 0.7  
 
-Entre les années 1400 et le milieu du 19ème les gens les plus riches (et donc souvent les plus intelligents) avaient plus d'enfants qui survivaient que les pauvres, ce qui a contribué à progressivement augmenté l'intelligence moyenne. Ce cercle vertueux a abouti à la révolution industrielle qui a décuplé notre confort de vie et notre survie, mais qui a aussi un peu inversé la tendance. Cette inversion de tendance vient principalement du fait que les gens stupides survivent plus qu'avant, et aussi par exemple que les femmes à bon QI s'orientent maintenant plus vers la carrière et moins vers le fait d'enfanter. [ SOURCE 7 ]
+Entre le 15ème et le milieu du 19ème les gens les plus riches (et donc souvent les plus intelligents) avaient plus d'enfants qui survivaient que les pauvres, ce qui a contribué à progressivement augmenter l'intelligence moyenne. Ce cercle vertueux a abouti à la révolution industrielle qui a décuplé notre confort de vie et notre survie, mais qui a aussi un peu inversé la tendance. Cette inversion de tendance vient principalement du fait que les gens stupides survivent plus qu'avant, et aussi par exemple que les femmes à bon QI s'orientent maintenant plus vers la carrière et moins vers le fait d'enfanter. [ SOURCE 7 ]
 # Chapitre 2 : What is Intelligence?
 
 L'intelligence peut être vue comme la capacité à penser de manière abstraite et à apprendre rapidement. On peut aussi voir pas mal de points communs entre l'intelligence et la puissance de calcul d'un ordinateur.
