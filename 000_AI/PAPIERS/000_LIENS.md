@@ -1,0 +1,6 @@
+- https://transformer-circuits.pub/
+- https://ai.meta.com/global_search/
+- https://openai.com/fr-FR/research/index/publication/
+- https://mistral.ai/news?category=Research
+- https://www.jmlr.org/
+- https://arxiv.org/list/cs.AI/recent
