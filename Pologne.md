@@ -9,3 +9,15 @@
 
 - https://www.otodom.pl/
 - https://www.domiporta.pl/
+
+# Papiers
+
+## PESEL
+
+https://www.gov.pl/web/gov/uzyskaj-numer-pesel--usluga-dla-cudzoziemcow-en
+
+- Identifiant civil utilisé partout et à demander à la mairie (Urząd Gminy) du lieu de résidence.
+- Délai de quelques heures à quelques jours selon la mairie.
+- Unique et valable à vie mais nécessité de mettre son adresse à jour si déménagement.
+- Faisable en même temps et avec l'enregistrement d'adresse (Zameldowanie).
+- Documents nécessaires : passeport et preuve du lieu de résidence (contrat de location ou attestation du propriétaire).
