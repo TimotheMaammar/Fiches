@@ -3,4 +3,5 @@
 - https://openai.com/fr-FR/research/index/publication/
 - https://mistral.ai/news?category=Research
 - https://www.jmlr.org/
-- https://arxiv.org/list/cs.AI/recent
+- https://arxiv.org/list/cs.AI/recent/
+- https://blog.neurips.cc/
