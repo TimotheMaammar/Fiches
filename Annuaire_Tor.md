@@ -2,15 +2,21 @@
 
 - http://2jwcnprqbugvyi6ok2h2h7u26qc6j5wxm7feh3znlh2qu3h6hjld4kyd.onion/
 - http://bj5hp4onm4tvpdb5rzf4zsbwoons67jnastvuxefe4s3v7kupjhgh6qd.onion/
+
 ## Autres fédérateurs - Web surfacique
 
-OnionLinksHub => https://www.onionlinkhub.com/links/     
+OnionLinksHub => https://www.onionlinkhub.com/links/      
+Dépôt utile => https://github.com/alecmuffett/real-world-onion-sites
+
 ## Autres fédérateurs - Dark web
 
 UnderDir => http://underdiriled6lvdfgiw4e5urfofuslnz7ewictzf76h4qb73fxbsxad.onion/     
 Darknet Links Directory => http://dnlinksemsch3ybzvyfwz6cg2gy4ee5wciyrlp3k5y5e3azexckt2lad.onion/     
 DarkWebSitesLinks => http://darkwebentyk2elhhh6okholnrookap7zfbun2is7ouspzxcpkqjxxad.onion/     
 Wiki Links => http://vykenniek4sagugiayj3z32rpyrinoadduprjtdy4wharue6cz7zudid.onion/     
+Deep Links Dump => http://deepdumptr3hfkg2fvpzct6kfot4wzkdrw43tmxb3seevhotr4ywdsyd.onion/     
+General Tor Links => http://fqr7fd4dmwxwpxn2355tnnj37x2hroxc2mr7uty4pwdflpt2bnbdiyqd.onion/     
+Tor.taxi => http://tortaxi2dev6xjwbaydqzla77rrnth7yn2oqzjfmiuwn5h6vsk2a4syd.onion/     
 
 ## Moteurs de recherche
 
