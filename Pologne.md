@@ -5,6 +5,10 @@
 - Quelques boulots autour de Cracovie : https://jobs.motife.com/jobs
 - France Diplomatie : https://www.diplomatie.gouv.fr/fr/services-aux-francais/preparer-son-expatriation/dossiers-pays-de-l-expatriation/pologne/
 
+# Démarches éventuelles à faire côté France 
+
+- Registre des Français établis hors de France : https://www.service-public.gouv.fr/particuliers/vosdroits/F33307
+
 # Logement
 
 - https://www.otodom.pl/
