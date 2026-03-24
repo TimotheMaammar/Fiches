@@ -5,3 +5,4 @@
 - https://www.jmlr.org/
 - https://arxiv.org/list/cs.AI/recent/
 - https://blog.neurips.cc/
+- https://www.kaggle.com/benchmarks
