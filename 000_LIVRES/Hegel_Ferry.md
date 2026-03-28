@@ -13,7 +13,7 @@ Le système de Hegel se construit avec deux grandes questions :
 
 Kant est un peu le sommet de la philosophie des Lumières et sera très critiqué par Hegel, parce qu'il est le philosophe de la scission, du déchirement entre l'Homme et Dieu et du déchirement entre l'Homme et la Nature, comme le judaïsme avant lui.
 
-Traits fondamentaux des Lumières qui seront ciblés par les romantiques : 
+Traits fondamentaux des Lumières qui seront ciblés par les romantiques :
 
 1) Culte de l'esprit critique, rejet des préjugés et rejet des traditions. Héritage de Descartes dans un sens, importance de la liberté humaine comme capacité à s'arracher à tous les déterminismes et tous les "enracinements communautaires". Cet aspect a évidemment beaucoup été rejeté par les contre-révolutionnaires avec la phrase bien connue de Joseph de Maistre : 
 "Il n'y a point d'homme dans le monde. J'ai vu dans ma vie des Français, des Italiens, des Russes; je sais même, grâce à Montesquieu, qu'on peut être Persan; mais quant à l'homme je déclare ne l'avoir rencontré de ma vie; s'il existe c'est bien à mon insu."
@@ -32,7 +32,7 @@ Cinq principes de raison de Leibniz :
 4) Principe des indiscernables : deux choses parfaitement identiques sont en réalité la même.
 5) Principe de continuité : la nature ne fait pas de saut.
 
-Trois concepts souvent utilisés par la critique romantique des Lumières : 
+Trois concepts souvent utilisés par la critique romantique des Lumières :
 
 - Concept de Vie : une communauté est vivante et pas juste définie par les théories du contrat social. Gemeinschaft (communauté vivante) en opposition à Gesellschaft (société abstraite).
 
@@ -53,11 +53,11 @@ Il critique aussi la théorie traditionnelle de la connaissance qui oppose Sujet
 
 Hegel reprend également l'expérience du morceau de cire de Descartes qui montre que la sensation peut tromper et n'est pas suffisante pour comprendre un objet. Seul l'entendement et les mathématiques permettent cela.
 
-La dialectique chez Hegel est très différente de celle de Platon : 
+La dialectique chez Hegel est très différente de celle de Platon :
 - Chez Platon : façon dont on confronte les idées différentes pour chercher la vérité
 - Chez Hegel : processus historique où chaque concept engendre son contraire
 
-Trois moments d'Hegel : 
+Trois moments d'Hegel :
 1) An sich (en soi) : Être en puissance (en opposition à l'Être en acte) équivalent à la graine de sapin qui contient déjà le sapin mais de manière indéterminée 
 2) Dasein (être-là) : Existence déterminée et déploiement des différences
 3) Für sich (pour soi) : Conscience de soi et fruit final qui unifie tout le reste
@@ -71,13 +71,13 @@ Trois idées fondamentales pour l'esthétique chez Hegel :
 
 Deux classifications des arts chez Hegel :
 
-1) Grandes visions et époques de l'art : 
+1) Grandes visions et époques de l'art :
 
 	- Symbolique
 	- Classique
 	- Romantique
 
-2) Genres artistiques dans l'ordre croissant de valeur selon Hegel : 
+2) Genres artistiques dans l'ordre croissant de valeur selon Hegel :
 
 	- Architecture (rien de plus opposé à l'intériorité de l'esprit que le volume en 3D) 
 	- < Sculpture (comme l'architecture mais en mieux parce que déjà plus humanisé) 
