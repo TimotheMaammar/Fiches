@@ -23,6 +23,26 @@
 - https://nofluffjobs.com/pl 
 - https://www.olx.pl/praca/
 
+# Freelancing
+
+## Bases 
+
+- En tant que citoyen français (UE), on peut créer une entreprise en Pologne sans besoin de visa ou de permis de travail.
+- Adresse en Pologne obligatoire pour avoir le numéro PESEL et une adresse fiscale.
+- JDG = Jednoosobowa Działalność Gospodarcza = Statut d'entrepreneur individuel.
+- CEIDG = Centralna Ewidencja i Informacja o Działalności Gospodarczej = Registre officiel polonais des entreprises individuelles où il faut s'inscrire ( https://www.biznes.gov.pl/ ).
+
+## Régimes fiscaux et cotisations
+
+1) Ryczałt (od przychodów ewidencjonowanych) = Forfait progressif = 12% ou parfois 8.5% dans certains cas 
+2) Podatek liniowy = Flat tax simple = 19% dans tous les cas
+3) Skala podatkowa = Barème progressif = 17% puis 32% mais déductions possibles
+
+
+- TVA obligatoire dès 200 000 PLN (~ 47 000 €) de chiffre d'affaires mais aussi parfois dans certains cas.
+
+- ZUS = Zakład Ubezpieczeń Społecznych = Équivalent des cotisations sociales françaises à payer chaque mois mais évitables pendant les 6 premiers mois (voir "ulga na start") et réductibles (voir "mały ZUS ").
+
 # Papiers
 
 ## PESEL
