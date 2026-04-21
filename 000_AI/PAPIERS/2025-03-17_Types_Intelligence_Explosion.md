@@ -7,7 +7,7 @@ Auteurs : Tom Davidson, Rose Hadshar, William MacAskill
 
 ## Contenu
 
-Une fois que l'IA peut concevoir des IA plus compétentes qu'elle-même, une boucle de rétroaction s'enclenche : meilleure IA => meilleurs outils => encore meilleure IA => [...] 
+Une fois que l'IA peut concevoir des IA plus compétentes qu'elle-même, une boucle de rétroaction s'enclenche : meilleure IA => meilleurs outils => encore meilleure IA => [...]      
 C'est ce qu'on appelle une explosion d'intelligence (EI). 
 
 Trois boucles principales de rétroaction classées par ordre de vitesse : 
