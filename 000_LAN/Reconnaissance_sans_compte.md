@@ -27,3 +27,10 @@
 	for i in $(seq 500 1100); do
 	    rpcclient -N -U "" <IP> -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" && echo "";
 	done
+
+## Nmap depuis un résultat Netdiscover
+
+	cat netdiscover.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | awk -F. 'BEGIN{ OFS="."} { print $1,$2,$3,"0/24" }' | sort -u > /tmp/netdiscover.txt
+	tmux new -s nmap
+	nmap -iL /tmp/netdiscover.txt -T5 -oA /audit/recon/nmap_netdiscover_ranges
+
