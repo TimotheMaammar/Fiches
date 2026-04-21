@@ -3,7 +3,8 @@
 ## Références 
 
 Lien : https://www.forethought.org/research/three-types-of-intelligence-explosion     
-Auteurs : Tom Davidson, Rose Hadshar, William MacAskill
+Auteurs : Tom Davidson, Rose Hadshar, William MacAskill     
+Autre papier lié : https://www.forethought.org/research/how-far-can-ai-progress-before-hitting-effective-physical-limits     
 
 ## Contenu
 
