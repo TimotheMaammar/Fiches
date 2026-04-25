@@ -7,3 +7,6 @@
 - https://blog.neurips.cc/
 - https://www.kaggle.com/benchmarks
 - https://www.forethought.org/research
+- https://research.google/blog/
+- https://www.nature.com/natmachintell/
+- https://www.nature.com/npjai/
