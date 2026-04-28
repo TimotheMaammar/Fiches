@@ -20,7 +20,7 @@ Manières de l'utiliser :
 - Web
 
 Le workflow optimal est le suivant :
-- Explore → Plan → Code → Commit
+- Explore → Plan → Code → Commit 
 
 Il est important de bien comprendre le projet en mode Plan avant de commencer à coder, pour corriger les éventuelles erreurs ou incompréhensions de Claude.
 
