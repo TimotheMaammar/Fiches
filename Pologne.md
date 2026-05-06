@@ -75,3 +75,7 @@ https://www.gov.pl/web/gov/uzyskaj-numer-pesel--usluga-dla-cudzoziemcow-en
 - L'assurance polonaise (Odpowiedzialność Cywilna) est obligatoire au moment où l'on devient résident polonais
 - L'assurance est aussi une transposition à faire comme le CT avant la réimmatriculation
 - Il y a une tolérance d'au moins un mois pour tout faire bien mais il vaut mieux éviter d'abuser du délai
+
+# Langue
+
+- Lien public de mes flashcards : https://quizlet.com/fr/1109036061/polonais-flash-cards/?funnelUUID=75a7080a-5bb0-471b-94ba-1296cb42ad5b
