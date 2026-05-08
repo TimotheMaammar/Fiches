@@ -1,7 +1,7 @@
 ## Énumération avec WPScan
 
 	wpscan --url https://www.site.fr --enumerate --plugins-detection aggressive
-	wpscan --url https://www.site.fr --enumerate --plugins-detection aggressive --api-token nBMWtafSgUM8QHRps4Ep5OtP2ee2Ziv9EEix3cTVcHA
+	wpscan --url https://www.site.fr --enumerate --plugins-detection aggressive --api-token $TOKEN
 
 ## Wordlists
 
