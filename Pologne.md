@@ -22,6 +22,7 @@
 - https://nofluffjobs.com/pl 
 - https://www.olx.pl/praca/
 - https://jobs.motife.com/jobs
+- https://theprotocol.it/
 
 # Freelancing
 
