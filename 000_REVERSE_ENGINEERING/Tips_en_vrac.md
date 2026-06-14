@@ -13,3 +13,5 @@
 - Quand il y a un "lea" avant un "call" c'est souvent pour passer l'adresse d'une structure ou d'un buffer de sortie à la fonction appelée.
 
 - Beaucoup de fonctions Windows utilisent le principe mentionné ci-dessus pour écrire leur résultat directement dans un argument fourni.
+
+- S'il n'y a pas de "sub  esp, 0xXX" dans le prologue d'une fonction, c'est qu'elle n'a pas de variables locales ou que ces dernières sont assez petites pour être en registres (ou alors que le frame est trop énorme mais dans ce cas on verra un "call __chkstk" dans les environs). 
