@@ -19,7 +19,7 @@ da 761d0000          # ASCII
 
 
 .formats 00905a4d    # Affichage de tous les formats 
-.formats @eax        # Pareil pour la valeur stockée dans ESP
+.formats @eax        # Pareil pour la valeur stockée dans EAX
 .formats poi(esp)    # Pareil mais utilisation d'ESP comme pointeur
 
 r eax, ebx           # Affichage des registres
