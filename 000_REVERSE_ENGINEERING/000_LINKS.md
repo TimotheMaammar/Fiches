@@ -13,3 +13,4 @@
 - https://github.com/epi052/osed-scripts/tree/main
 - https://github.com/nop-tech/OSED/
 - https://github.com/r0r0x-xx/OSED-Pre
+- https://ian.nl/blog/wpm-quotedb
