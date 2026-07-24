@@ -32,6 +32,7 @@
 - Adresse en Pologne obligatoire pour avoir le numéro PESEL et une adresse fiscale.
 - JDG = Jednoosobowa Działalność Gospodarcza = Statut d'entrepreneur individuel.
 - CEIDG = Centralna Ewidencja i Informacja o Działalności Gospodarczej = Registre officiel polonais des entreprises individuelles où il faut s'inscrire ( https://www.biznes.gov.pl/ ).
+- Refonte du PKD pour la cybersécurité en 2025 => Le bon code est 62.20.A pour le pentesting
 
 ## Régimes fiscaux et cotisations
 
@@ -43,18 +44,6 @@
 - TVA obligatoire dès 200 000 PLN (~ 47 000 €) de chiffre d'affaires mais aussi parfois dans certains cas.
 
 - ZUS = Zakład Ubezpieczeń Społecznych = Équivalent des cotisations sociales françaises à payer chaque mois mais évitables pendant les 6 premiers mois (voir "ulga na start") et réductibles (voir "mały ZUS ").
-
-## Agences
-
-Agence d'intérim = Biuro Pracy Tymczasowej
-
-Quelques agences locales pour des missions courtes : 
-- Manpower : https://www.manpower.pl/
-- Randstad : https://www.randstad.pl/
-- Heidrick & Struggles : https://www.heidrick.com/en
-- Adecco : https://www.adecco.pl/
-- Experis : https://www.experis.pl/
-- Iteo : https://iteo.com/
 
 # Papiers
 
