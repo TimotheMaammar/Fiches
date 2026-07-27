@@ -33,6 +33,7 @@
 - JDG = Jednoosobowa Działalność Gospodarcza = Statut d'entrepreneur individuel.
 - CEIDG = Centralna Ewidencja i Informacja o Działalności Gospodarczej = Registre officiel polonais des entreprises individuelles où il faut s'inscrire ( https://www.biznes.gov.pl/ ).
 - Refonte du PKD pour la cybersécurité en 2025 => Le bon code est 62.20.A pour le pentesting
+- Il faut faire un "Profil zaufany" (profil de confiance) avant de faire une auto-entreprise, mais les SMS du site n'arrivent parfois pas pour les numéros étrangers. Le bypass est de s'enregistrer dans une grosse banque (juste avec un PESEL) puis de faire le profil de confiance avec la banque.
 
 ## Régimes fiscaux et cotisations
 
