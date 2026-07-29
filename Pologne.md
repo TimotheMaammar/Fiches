@@ -7,6 +7,8 @@
 # Démarches éventuelles à faire côté France 
 
 - Registre des Français établis hors de France : https://www.service-public.gouv.fr/particuliers/vosdroits/F33307
+- Dès que l'on a une boîte avec un numéro NIP, on peut demander une attestation de résidence fiscale polonaise (voir dans le "urząd skarbowy" le plus proche) et la transmettre au fisc français pour éviter la double imposition : Certyfikat rezydencji podatkowej
+- Déclarer le départ dans la première année au centre des impôts français et éventuellement à la banque
 
 # Logement
 
@@ -33,7 +35,9 @@
 - JDG = Jednoosobowa Działalność Gospodarcza = Statut d'entrepreneur individuel.
 - CEIDG = Centralna Ewidencja i Informacja o Działalności Gospodarczej = Registre officiel polonais des entreprises individuelles où il faut s'inscrire ( https://www.biznes.gov.pl/ ).
 - Refonte du PKD pour la cybersécurité en 2025 => Le bon code est 62.20.A pour le pentesting
-- Il faut faire un "Profil zaufany" (profil de confiance) avant de faire une auto-entreprise, mais les SMS du site n'arrivent parfois pas pour les numéros étrangers. Le bypass est de s'enregistrer dans une grosse banque (juste avec un PESEL) puis de faire le profil de confiance avec la banque.
+- Pour tout faire en ligne (sans aller signer physiquement à la fin), il faut faire un "Profil zaufany" (profil de confiance) avant de faire une auto-entreprise, mais les SMS du site n'arrivent parfois pas pour les numéros étrangers. Le bypass est de s'enregistrer dans une grosse banque (juste avec un PESEL) puis de faire le profil de confiance avec la banque.
+- Le KSeF (Krajowy System e-Faktur) est une plateforme nationale gérée par le fisc polonais : toutes les factures B2B transitent obligatoirement par ce système central, qui leur attribue un numéro officiel et les rend directement visibles par l'administration fiscale en temps réel. Obligatoire depuis 2026.
+
 
 ## Régimes fiscaux et cotisations
 
