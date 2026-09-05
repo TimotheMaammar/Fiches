@@ -50,6 +50,16 @@
 
 - ZUS = Zakład Ubezpieczeń Społecznych = Équivalent des cotisations sociales françaises à payer chaque mois mais évitables pendant les 6 premiers mois (voir "ulga na start") et réductibles (voir "mały ZUS ").
 
+## Compte business et JDG 
+
+- Importance de passer par une grosse banque qui inclut déjà le processus de facturation, pour se simplifier la vie.
+- Ulga na start = 6 mois d'exonération au début = Formulaire ZUS ZZA à envoyer dans la première semaine d'activité officielle de l'entreprise (code 05 40 XX)     
+    => Tutoriel cool : https://pomoc.infakt.pl/hc/pl/articles/115000852950-Jak-wype%C5%82ni%C4%87-deklaracj%C4%99-ZUS-ZZA-w-PUE
+  
+- Avant la fin des 6 mois, il faudra faire un ZWUA + ZUA groupés pour reset la situation et repartir sur un schéma normal     
+    => Groupe utile : https://www.facebook.com/groups/543004296186218/
+
+
 # Papiers
 
 ## PESEL
