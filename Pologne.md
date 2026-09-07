@@ -81,6 +81,23 @@ https://www.gov.pl/web/gov/uzyskaj-numer-pesel--usluga-dla-cudzoziemcow-en
 - L'assurance est aussi une transposition à faire comme le CT avant la réimmatriculation
 - Il y a une tolérance d'au moins un mois pour tout faire bien mais il vaut mieux éviter d'abuser du délai
 
+## Enregistrement du séjour UE (Zaświadczenie o zarejestrowaniu pobytu obywatela UE)
+
+https://www.gov.pl/web/dolnoslaski-uw/zarejestrowanie-pobytu-obywatela-unii-europejskiej
+
+- Optionnel légalement pour un citoyen UE mais utile pour officialiser la résidence polonaise et simplifier les démarches futures.
+- À faire en personne au Urząd Wojewódzki (préfecture régionale) de son lieu de résidence, au guichet Wydział Spraw Obywatelskich i Cudzoziemców (service des étrangers).
+- Théoriquement dans les 3 mois suivant l'entrée sur le territoire mais pas de sanction réelle pour un citoyen UE en retard.
+- Documents à préparer :
+    - Formulaire rempli + 2 photocopies des pages 1 et 2
+    - Passeport ou CNI
+    - 4 photos d'identité récentes
+    - Justificatif de résidence (bail, papier du propriétaire, etc.)
+    - Preuve d'activité ou de fonds suffisants pour rester (CEIDG, salaire, relevé bancaire, etc.) 
+    - Justificatif d'assurance santé : carte EKUZ (= carte européenne d'assurance maladie = verso de la carte Vitale) ou assurance privée
+
+
+
 # Langue
 
 - Lien public de mes flashcards : https://quizlet.com/fr/1109036061/polonais-flash-cards/?funnelUUID=75a7080a-5bb0-471b-94ba-1296cb42ad5b
