@@ -1,3 +1,10 @@
+# WordPress 
+
+## Handlers AJAX sans authentification 
+
+	grep -RIn "wp_ajax_nopriv_" wp-content
+	grep -RIn --include="*.php" "wp_ajax_nopriv_" .
+
 ## Énumération avec WPScan
 
 	wpscan --url https://www.site.fr --enumerate --plugins-detection aggressive
