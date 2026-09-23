@@ -46,9 +46,13 @@
 3) Skala podatkowa = Barème progressif = 17% puis 32% mais déductions possibles
 
 
-- TVA obligatoire dès 200 000 PLN (~ 47 000 €) de chiffre d'affaires mais aussi parfois dans certains cas.
+- TVA obligatoire dès 240 000 PLN de chiffre d'affaires mais aussi parfois dans certains cas.
 
 - ZUS = Zakład Ubezpieczeń Społecznych = Équivalent des cotisations sociales françaises à payer chaque mois mais évitables pendant les 6 premiers mois (voir "ulga na start") et réductibles (voir "mały ZUS ").
+
+- Penser à envoyer le formulaire TVA-R pour s'enregistrer comme contribuable exonéré de TVA : https://www.podatki.gov.pl/podatki-firmowe/vat/formularze
+
+- Utiliser soit la règle "nie podlega VAT w Polsce" si on a un client étranger, soit l'article 113 qui évite la TVA sous les 240 000.
 
 ## Compte business et JDG 
 
