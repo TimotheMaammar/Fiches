@@ -1,31 +1,3 @@
-# Liens utiles
-
-- Chambre Franco-Polonaise de Commerce (CCIFP) : https://www.ccifp.pl/fr.html
-- Chambre de Commerce et d'Industrie Polonaise en France (CCIPF) : https://ccipf.org/fr/news-fr/
-- France Diplomatie : https://www.diplomatie.gouv.fr/fr/services-aux-francais/preparer-son-expatriation/dossiers-pays-de-l-expatriation/pologne/
-
-# Démarches éventuelles à faire côté France 
-
-- Registre des Français établis hors de France : https://www.service-public.gouv.fr/particuliers/vosdroits/F33307
-- Dès que l'on a une boîte avec un numéro NIP, on peut demander une attestation de résidence fiscale polonaise (voir dans le "urząd skarbowy" le plus proche) et la transmettre au fisc français pour éviter la double imposition : Certyfikat rezydencji podatkowej
-- Déclarer le départ dans la première année au centre des impôts français et éventuellement à la banque
-
-# Logement
-
-- https://www.otodom.pl/
-- https://www.domiporta.pl/
-
-# Boulots
-
-- https://www.pracuj.pl/
-- https://www.praca.pl/
-- https://justjoin.it
-- https://pl.jooble.org
-- https://nofluffjobs.com/pl 
-- https://www.olx.pl/praca/
-- https://jobs.motife.com/jobs
-- https://theprotocol.it/
-
 # Freelancing
 
 ## Bases 
@@ -52,7 +24,9 @@
 
 - Penser à envoyer le formulaire TVA-R pour s'enregistrer comme contribuable exonéré de TVA : https://www.podatki.gov.pl/podatki-firmowe/vat/formularze
 
-- Utiliser soit la règle "nie podlega VAT w Polsce" si on a un client étranger, soit l'article 113 qui évite la TVA sous les 240 000.
+- Utiliser soit la règle "Nie podlega VAT w Polsce" si on a un client étranger, soit l'article 113 qui évite la TVA sous les 240 000.
+
+- L'administration renvoie rapidement un gros questionnaire à remplir sous 7 jours pour vérifier l'activité et l'exonération de TVA.
 
 ## Compte business et JDG 
 
@@ -100,7 +74,33 @@ https://www.gov.pl/web/dolnoslaski-uw/zarejestrowanie-pobytu-obywatela-unii-euro
     - Preuve d'activité ou de fonds suffisants pour rester (CEIDG, salaire, relevé bancaire, etc.) 
     - Justificatif d'assurance santé : carte EKUZ (= carte européenne d'assurance maladie = verso de la carte Vitale) ou assurance privée
 
+# Liens utiles
 
+- Chambre Franco-Polonaise de Commerce (CCIFP) : https://www.ccifp.pl/fr.html
+- Chambre de Commerce et d'Industrie Polonaise en France (CCIPF) : https://ccipf.org/fr/news-fr/
+- France Diplomatie : https://www.diplomatie.gouv.fr/fr/services-aux-francais/preparer-son-expatriation/dossiers-pays-de-l-expatriation/pologne/
+
+# Démarches éventuelles à faire côté France 
+
+- Registre des Français établis hors de France : https://www.service-public.gouv.fr/particuliers/vosdroits/F33307
+- Dès que l'on a une boîte avec un numéro NIP, on peut demander une attestation de résidence fiscale polonaise (voir dans le "urząd skarbowy" le plus proche) et la transmettre au fisc français pour éviter la double imposition : Certyfikat rezydencji podatkowej
+- Déclarer le départ dans la première année au centre des impôts français et éventuellement à la banque
+
+# Logement
+
+- https://www.otodom.pl/
+- https://www.domiporta.pl/
+
+# Boulots
+
+- https://www.pracuj.pl/
+- https://www.praca.pl/
+- https://justjoin.it
+- https://pl.jooble.org
+- https://nofluffjobs.com/pl 
+- https://www.olx.pl/praca/
+- https://jobs.motife.com/jobs
+- https://theprotocol.it/
 
 # Langue
 
