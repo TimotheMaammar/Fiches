@@ -37,6 +37,12 @@
 - Avant la fin des 6 mois, il faudra faire un ZWUA + ZUA groupés pour reset la situation et repartir sur un schéma normal     
     => Groupe utile : https://www.facebook.com/groups/543004296186218/
 
+- On peut obtenir son Mikrorachunek facilement sur https://urzadskarbowy.gov.pl/services (Twoje Dane => Mikrorachunek podatkowy => Entrer le NIP => Bien garder le numéro donné qui sera le numéro de compte cible pour le virement des taxes).
+
+- Payer directement depuis sa banque est en général plus avantageux et simple.      
+      => Sur Moje ING : Przelewy => Przelew podatkowy => PIT pour le "Typ formularza" et bien remplir le reste des données
+
+- On peut déduire une partie des ZUS pour ces taxes donc bien penser à optimiser la fiscalité une fois la période "Ulga na start" finie.
 
 # Papiers
 
