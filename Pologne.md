@@ -28,6 +28,9 @@
 
 - L'administration renvoie rapidement un gros questionnaire à remplir sous 7 jours pour vérifier l'activité et l'exonération de TVA.
 
+- DRA = Deklaracja Rozliczeniowa = Déclaration à envoyer avant le 20 du mois N+1 à côté du paiement des taxes       
+    => Sur www.zus.pl : e-Płatnik → Kreatory → Obsługa rozliczenia 
+
 ## Compte business et JDG 
 
 - Importance de passer par une grosse banque qui inclut déjà le processus de facturation, pour se simplifier la vie.
